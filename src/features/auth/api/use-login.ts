@@ -20,7 +20,7 @@ export const useLogin = () => {
     },
     onSuccess() {
       toast.success("Logged in");
-      queryClient.invalidateQueries({ queryKey: ["current"] });
+      queryClient.invalidateQueries({ queryKey: ["current", "workspaces"] });
       router.refresh();
     },
     onError() {
