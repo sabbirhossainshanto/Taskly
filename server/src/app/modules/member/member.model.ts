@@ -2,17 +2,19 @@ import { model, Schema } from "mongoose";
 import { IMember } from "./member.interface";
 
 const memberSchema = new Schema<IMember>({
-  name: {
+  role: {
     type: String,
     required: true,
   },
-  email: {
-    type: String,
+  userId: {
+    type: Schema.Types.ObjectId,
     required: true,
-    unique: true,
+    ref: "User",
   },
-  password: {
-    type: String,
+  workspaceId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "Workspace",
   },
 });
 

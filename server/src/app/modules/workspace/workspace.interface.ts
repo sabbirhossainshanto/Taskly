@@ -1,6 +1,8 @@
+import { Types } from "mongoose";
+
 export interface IWorkspace {
   name: string;
-  imageUrl: string;
+  image: string;
   inviteCode: string;
-  userId: string;
+  userId: Types.ObjectId;
 }

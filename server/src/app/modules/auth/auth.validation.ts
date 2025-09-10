@@ -7,7 +7,14 @@ export const registerValidation = z.object({
     password: z.string().min(8, "Minimum of 8 characters required"),
   }),
 });
+export const loginValidation = z.object({
+  body: z.object({
+    email: z.email(),
+    password: z.string().min(8, "Minimum of 8 characters required"),
+  }),
+});
 
 export const authValidation = {
   registerValidation,
+  loginValidation,
 };

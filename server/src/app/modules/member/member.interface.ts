@@ -1,5 +1,8 @@
+import { Types } from "mongoose";
+import { IUserRole } from "../user/user.interface";
+
 export interface IMember {
-  name: string;
-  email: string;
-  password: string;
+  userId: Types.ObjectId;
+  workspaceId: Types.ObjectId;
+  role: IUserRole;
 }
