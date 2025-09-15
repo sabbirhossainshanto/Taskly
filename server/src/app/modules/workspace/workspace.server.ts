@@ -38,6 +38,15 @@ export const getUserWorkspaces = async (user: IUser) => {
   return workspaces;
 };
 
+export const getSingleWorkspace = async (workspaceId: string) => {
+  const workspace = await Workspace.findById(workspaceId);
+
+  if (!workspace) {
+    throw new AppError(httpStatus.NOT_FOUND, "Workspace not found");
+  }
+  return workspace;
+};
+
 export const updateWorkspace = async (
   workspaceId: string,
   payload: Partial<IWorkspace>,
@@ -158,4 +167,5 @@ export const workspaceService = {
   deleteWorkspace,
   resetInviteCode,
   joinWorkspace,
+  getSingleWorkspace,
 };

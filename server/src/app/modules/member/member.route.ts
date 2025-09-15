@@ -16,7 +16,7 @@ router.patch(
   "/",
   auth,
   validateRequest(memberValidation.updateWorkspacesMember),
-  memberController.deleteWorkspaceMember
+  memberController.updateWorkspaceMember
 );
 
 export const memberRoutes = router;

@@ -1,35 +1,32 @@
+import { IUserRole } from "@/features/auth/type";
+import { IWorkspace } from "@/features/workspaces/type";
+import { AxiosSecure } from "@/lib/AxiosSecure";
+import { IResponse } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InferRequestType, InferResponseType } from "hono";
-import { client } from "@/lib/rpc";
+import { AxiosError } from "axios";
 import { toast } from "sonner";
-
-type ResponseType = InferResponseType<
-  (typeof client.api.members)[":memberId"]["$patch"],
-  200
->;
-type RequestType = InferRequestType<
-  (typeof client.api.members)[":memberId"]["$patch"]
->;
 
 export const useUpdateMember = () => {
   const queryClient = useQueryClient();
-  const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ param, json }) => {
-      const response = await client.api.members[":memberId"]["$patch"]({
-        param,
-        json,
-      });
-      if (!response.ok) {
-        throw new Error("Failed to update member");
-      }
-      return response.json();
+  const mutation = useMutation<
+    IResponse<IWorkspace>,
+    Error,
+    { workspaceId: string; memberId: string; role: IUserRole }
+  >({
+    mutationFn: async (payload) => {
+      const { data } = await AxiosSecure.patch(`/members`, payload);
+      return data;
     },
     onSuccess() {
       toast.success("Member updated");
       queryClient.invalidateQueries({ queryKey: ["members"] });
     },
-    onError() {
-      toast.error("Failed to update member");
+    onError(error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message);
+      } else {
+        toast.error("Failed to update member");
+      }
     },
   });
 

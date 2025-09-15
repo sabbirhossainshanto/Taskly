@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDeleteMember } from "@/features/members/api/use-delete-member";
 import { useUpdateMember } from "@/features/members/api/use-update-member";
-import { MemberRole } from "@/features/members/types";
 import { useConfirm } from "@/hooks/use-confirm";
+import { IUserRole, USER_ROLE } from "@/features/auth/type";
 
 export const MembersList = () => {
   const workspaceId = useWorkspaceId();
@@ -29,25 +29,31 @@ export const MembersList = () => {
     "destructive"
   );
   const { data } = useGetMembers({ workspaceId });
+
   const { mutate: deleteMember, isPending: isDeletingMember } =
     useDeleteMember();
   const { mutate: updateMember, isPending: isUpdatingMember } =
     useUpdateMember();
 
-  const handleUpdateMember = (memberId: string, role: MemberRole) => {
+  const handleUpdateMember = (
+    memberId: string,
+    role: IUserRole,
+    workspaceId: string
+  ) => {
     updateMember({
-      json: { role },
-      param: { memberId },
+      memberId,
+      role,
+      workspaceId,
     });
   };
 
-  const handleDeleteMember = async (memberId: string) => {
+  const handleDeleteMember = async (workspaceId: string, memberId: string) => {
     const ok = await confirm();
     if (!ok) return;
     deleteMember(
-      { param: { memberId } },
+      { memberId, workspaceId },
       {
-        onSettled() {
+        onSuccess() {
           window.location.reload();
         },
       }
@@ -69,17 +75,19 @@ export const MembersList = () => {
         <DottedSeparator />
       </div>
       <CardContent className="p-7">
-        {data?.documents.map((member, index) => (
+        {data?.data.map((member, index) => (
           <Fragment key={index}>
             <div className="flex items-center gap-2">
               <MemberAvatar
                 className="size-10"
                 fallbackClassName="text-lg"
-                name={member.name}
+                name={member.userId.name}
               />
               <div className="flex flex-col">
-                <p className="text-sm font-medium">{member.name}</p>
-                <p className="text-xs text-muted-foreground">{member.email}</p>
+                <p className="text-sm font-medium">{member.userId.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {member.userId.email}
+                </p>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -91,7 +99,11 @@ export const MembersList = () => {
                   <DropdownMenuItem
                     className="font-medium"
                     onClick={() =>
-                      handleUpdateMember(member.$id, MemberRole.ADMIN)
+                      handleUpdateMember(
+                        member.userId._id,
+                        USER_ROLE.admin,
+                        member.workspaceId._id
+                      )
                     }
                     disabled={isUpdatingMember}
                   >
@@ -100,7 +112,11 @@ export const MembersList = () => {
                   <DropdownMenuItem
                     className="font-medium"
                     onClick={() =>
-                      handleUpdateMember(member.$id, MemberRole.MEMBER)
+                      handleUpdateMember(
+                        member.userId._id,
+                        USER_ROLE.member,
+                        member.workspaceId._id
+                      )
                     }
                     disabled={isUpdatingMember}
                   >
@@ -108,17 +124,20 @@ export const MembersList = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="font-medium text-amber-700"
-                    onClick={() => handleDeleteMember(member.$id)}
+                    onClick={() =>
+                      handleDeleteMember(
+                        member.workspaceId._id,
+                        member.userId._id
+                      )
+                    }
                     disabled={isDeletingMember}
                   >
-                    Remove {member.name}
+                    Remove {member.userId.name}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            {index < data?.documents.length - 1 && (
-              <Separator className="my-2.5" />
-            )}
+            {index < data?.data.length - 1 && <Separator className="my-2.5" />}
           </Fragment>
         ))}
       </CardContent>

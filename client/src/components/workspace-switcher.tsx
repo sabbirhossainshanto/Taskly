@@ -38,12 +38,12 @@ export const WorkspaceSwitcher = () => {
           <SelectValue placeholder="No workspace selected" />
         </SelectTrigger>
         <SelectContent>
-          {workspaces?.documents?.map((workspace) => (
-            <SelectItem key={workspace.$id} value={workspace?.$id}>
+          {workspaces?.data?.map((workspace) => (
+            <SelectItem key={workspace._id} value={workspace?._id}>
               <div className="flex justify-start items-center gap-3 font-medium">
                 <WorkspaceAvatar
                   name={workspace?.name}
-                  image={workspace?.imageUrl}
+                  image={workspace?.image}
                 />
                 <span className="truncate"> {workspace?.name}</span>
               </div>

@@ -1,35 +1,34 @@
+import { AxiosSecure } from "@/lib/AxiosSecure";
+import { IResponse } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InferRequestType, InferResponseType } from "hono";
-import { client } from "@/lib/rpc";
 import { toast } from "sonner";
-
-type ResponseType = InferResponseType<
-  (typeof client.api.workspaces)[":workspaceId"]["$delete"],
-  200
->;
-type RequestType = InferRequestType<
-  (typeof client.api.workspaces)[":workspaceId"]["$delete"]
->;
+import { IWorkspace } from "../type";
+import { AxiosError } from "axios";
 
 export const useDeleteWorkspace = () => {
   const queryClient = useQueryClient();
-  const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ param }) => {
-      const response = await client.api.workspaces[":workspaceId"]["$delete"]({
-        param,
-      });
-      if (!response.ok) {
-        throw new Error("Failed to delete workspace");
-      }
-      return response.json();
+  const mutation = useMutation<
+    IResponse<IWorkspace>,
+    Error,
+    { workspaceId: string }
+  >({
+    mutationFn: async ({ workspaceId }) => {
+      const { data } = await AxiosSecure.delete(`/workspaces/${workspaceId}`);
+      return data;
     },
-    onSuccess({ data }) {
-      toast.success("Workspace deleted");
+    onSuccess(data) {
+      toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      queryClient.invalidateQueries({ queryKey: ["workspace", data.$id] });
+      queryClient.invalidateQueries({
+        queryKey: ["workspace", data.data?._id],
+      });
     },
-    onError() {
-      toast.error("Failed to create workspace");
+    onError(error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message);
+      } else {
+        toast.error("Failed to delete workspace");
+      }
     },
   });
 

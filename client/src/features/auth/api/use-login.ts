@@ -1,30 +1,35 @@
+import { IResponse } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InferRequestType, InferResponseType } from "hono";
-import { client } from "@/lib/rpc";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
-type ResponseType = InferResponseType<(typeof client.api.auth.login)["$post"]>;
-type RequestType = InferRequestType<(typeof client.api.auth.login)["$post"]>;
+import z from "zod";
+import { loginSchema } from "../schemas";
+import { AxiosError } from "axios";
+import { loginUser } from "../server/auth";
 
 export const useLogin = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ json }) => {
-      const response = await client.api.auth.login["$post"]({ json });
-      if (!response.ok) {
-        throw new Error("Failed to login");
-      }
-      return response.json();
+  const mutation = useMutation<
+    IResponse<{ accessToken: string; refreshToken: string }>,
+    Error,
+    z.infer<typeof loginSchema>
+  >({
+    mutationFn: async (payload) => {
+      const { data } = await loginUser(payload);
+      return data;
     },
-    onSuccess() {
-      toast.success("Logged in");
+    onSuccess(data) {
+      toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["current", "workspaces"] });
-      router.refresh();
+      router.push("/");
     },
-    onError() {
-      toast.error("Failed to login");
+    onError(error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message);
+      } else {
+        toast.error("Failed to login");
+      }
     },
   });
 

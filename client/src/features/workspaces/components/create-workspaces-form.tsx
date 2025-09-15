@@ -40,20 +40,18 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceProps) => {
   });
 
   const onSubmit = (values: z.infer<typeof createWorkspacesSchema>) => {
-    const finalValues = {
-      ...values,
-      image: values?.image instanceof File ? values.image : "",
-    };
-    mutate(
-      { form: finalValues },
-      {
-        onSuccess({ data }) {
-          form.reset();
-          router.push(`/workspaces/${data.$id}`);
-          // onCancel?.();
-        },
-      }
-    );
+    const formData = new FormData();
+    if (values.image instanceof File) {
+      formData.append("file", values.image);
+    }
+    formData.append("data", JSON.stringify({ name: values.name }));
+    mutate(formData, {
+      onSuccess({ data }) {
+        form.reset();
+        router.push(`/workspaces/${data._id}`);
+        // onCancel?.();
+      },
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

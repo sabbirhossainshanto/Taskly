@@ -1,39 +1,43 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InferRequestType, InferResponseType } from "hono";
-import { client } from "@/lib/rpc";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
-type ResponseType = InferResponseType<
-  (typeof client.api.workspaces)[":workspaceId"]["$patch"],
-  200
->;
-type RequestType = InferRequestType<
-  (typeof client.api.workspaces)[":workspaceId"]["$patch"]
->;
+import { AxiosSecure } from "@/lib/AxiosSecure";
+import { IResponse } from "@/types";
+import { IWorkspace } from "../type";
+import { AxiosError } from "axios";
 
 export const useUpdateWorkspace = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ form, param }) => {
-      const response = await client.api.workspaces[":workspaceId"]["$patch"]({
-        form,
-        param,
-      });
-      if (!response.ok) {
-        throw new Error("Failed to update workspace");
-      }
-      return response.json();
+  const mutation = useMutation<
+    IResponse<IWorkspace>,
+    Error,
+    {
+      formData: FormData;
+      _id: string;
+    }
+  >({
+    mutationFn: async (payload) => {
+      const { data } = await AxiosSecure.patch(
+        `/workspaces/${payload._id}`,
+        payload.formData
+      );
+      return data;
     },
-    onSuccess({ data }) {
-      toast.success("Workspace updated");
+    onSuccess(data) {
+      toast.success(data.message);
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      queryClient.invalidateQueries({ queryKey: ["workspaces", data.$id] });
+      queryClient.invalidateQueries({
+        queryKey: ["workspaces", data.data?._id],
+      });
     },
-    onError() {
-      toast.error("Failed to create workspace");
+    onError(error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message);
+      } else {
+        toast.error("Failed to update workspace");
+      }
     },
   });
 

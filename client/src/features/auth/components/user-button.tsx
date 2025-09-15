@@ -15,6 +15,7 @@ import { useLogout } from "../api/use-logout";
 export const UserButton = () => {
   const { data: user, isLoading } = useCurrent();
   const { mutate: logout } = useLogout();
+
   if (isLoading) {
     return (
       <div className="size-10 rounded-full flex items-center justify-center bg-neutral-200 border border-neutral-300">
@@ -27,7 +28,7 @@ export const UserButton = () => {
     return null;
   }
 
-  const { name, email } = user;
+  const { name, email } = user.data;
 
   const avatarFallback = name
     ? name.charAt(0).toUpperCase()

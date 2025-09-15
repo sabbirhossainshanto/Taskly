@@ -1,8 +1,7 @@
-import { Models } from "node-appwrite";
-
-export type Workspace = Models.Document & {
+export interface IWorkspace {
   name: string;
-  imageUrl: string;
+  image: string;
   inviteCode: string;
   userId: string;
-};
+  _id: string;
+}

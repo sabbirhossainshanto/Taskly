@@ -1,5 +1,9 @@
 import { Router } from "express";
+import auth from "../../middlewares/auth";
+import { userController } from "./user.controller";
 
 const router = Router();
 
-export const memberRoutes = router;
+router.get("/me", auth, userController.getMe);
+
+export const userRoutes = router;

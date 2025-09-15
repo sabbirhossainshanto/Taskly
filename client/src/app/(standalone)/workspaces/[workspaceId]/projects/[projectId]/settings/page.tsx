@@ -1,4 +1,4 @@
-import { getCurrent } from "@/features/auth/queries";
+import { getCurrent } from "@/features/auth/server/auth";
 import { EditProjectForm } from "@/features/projects/components/edit-project-form";
 import { getProject } from "@/features/projects/queries";
 import { redirect } from "next/navigation";

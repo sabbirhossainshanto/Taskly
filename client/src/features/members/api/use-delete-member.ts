@@ -1,34 +1,34 @@
+import { AxiosSecure } from "@/lib/AxiosSecure";
+import { IResponse } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InferRequestType, InferResponseType } from "hono";
-import { client } from "@/lib/rpc";
-import { toast } from "sonner";
 
-type ResponseType = InferResponseType<
-  (typeof client.api.members)[":memberId"]["$delete"],
-  200
->;
-type RequestType = InferRequestType<
-  (typeof client.api.members)[":memberId"]["$delete"]
->;
+import { toast } from "sonner";
+import { IMember } from "../types";
+import { AxiosError } from "axios";
 
 export const useDeleteMember = () => {
   const queryClient = useQueryClient();
-  const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ param }) => {
-      const response = await client.api.members[":memberId"]["$delete"]({
-        param,
-      });
-      if (!response.ok) {
-        throw new Error("Failed to delete member");
-      }
-      return response.json();
+  const mutation = useMutation<
+    IResponse<IMember>,
+    Error,
+    { workspaceId: string; memberId: string }
+  >({
+    mutationFn: async ({ workspaceId, memberId }) => {
+      const { data } = await AxiosSecure.delete(
+        `/members/${workspaceId}/${memberId}`
+      );
+      return data;
     },
     onSuccess() {
       toast.success("Member deleted");
       queryClient.invalidateQueries({ queryKey: ["members"] });
     },
-    onError() {
-      toast.error("Failed to delete member");
+    onError(error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message);
+      } else {
+        toast.error("Failed to delete member");
+      }
     },
   });
 

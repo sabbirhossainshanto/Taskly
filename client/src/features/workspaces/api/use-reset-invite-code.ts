@@ -1,40 +1,36 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InferRequestType, InferResponseType } from "hono";
-import { client } from "@/lib/rpc";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
-type ResponseType = InferResponseType<
-  (typeof client.api.workspaces)[":workspaceId"]["reset-invite-code"]["$post"],
-  200
->;
-type RequestType = InferRequestType<
-  (typeof client.api.workspaces)[":workspaceId"]["reset-invite-code"]["$post"]
->;
+import { AxiosSecure } from "@/lib/AxiosSecure";
+import { IResponse } from "@/types";
+import { IWorkspace } from "../type";
+import { AxiosError } from "axios";
 
 export const useResetInviteCode = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ param }) => {
-      const response = await client.api.workspaces[":workspaceId"][
-        "reset-invite-code"
-      ]["$post"]({
-        param,
-      });
-      if (!response.ok) {
-        throw new Error("Failed to reset invite code");
-      }
-      return response.json();
+  const mutation = useMutation<
+    IResponse<IWorkspace>,
+    Error,
+    { workspaceId: string }
+  >({
+    mutationFn: async ({ workspaceId }) => {
+      const { data } = await AxiosSecure.post(`/workspaces/${workspaceId}`);
+      return data;
     },
-    onSuccess({ data }) {
-      toast.success("Invite code reset");
+    onSuccess(data) {
+      toast.success(data.message);
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      queryClient.invalidateQueries({ queryKey: ["workspace", data.$id] });
+      queryClient.invalidateQueries({ queryKey: ["workspace", data.data._id] });
     },
-    onError() {
-      toast.error("Failed to reset invite code");
+    onError(error) {
+      console.log(error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message);
+      } else {
+        toast.error("Failed to reset invite code");
+      }
     },
   });
 

@@ -18,6 +18,7 @@ router.post(
 );
 
 router.get("/", auth, workspaceController.getUserWorkspaces);
+router.get("/:workspaceId", auth, workspaceController.getSingleWorkspace);
 
 router.patch(
   "/:workspaceId",
@@ -31,4 +32,5 @@ router.patch(
 router.delete("/:workspaceId", auth, workspaceController.deleteWorkspace);
 
 router.post("/:workspaceId/join", auth, workspaceController.joinWorkspace);
+router.post("/:workspaceId", auth, workspaceController.resetInviteCode);
 export const workspaceRoutes = router;

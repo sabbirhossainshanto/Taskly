@@ -22,16 +22,17 @@ import Image from "next/image";
 import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Workspace } from "../type";
+
 import { useUpdateWorkspace } from "../api/use-update-workspace";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useDeleteWorkspace } from "../api/use-delete-workspace";
 import { toast } from "sonner";
 import { useResetInviteCode } from "../api/use-reset-invite-code";
+import { IWorkspace } from "../type";
 
 interface EditWorkspaceProps {
   onCancel?: () => void;
-  initialValues: Workspace;
+  initialValues: IWorkspace;
 }
 
 export const EditWorkspaceForm = ({
@@ -59,7 +60,7 @@ export const EditWorkspaceForm = ({
     resolver: zodResolver(updateWorkspacesSchema),
     defaultValues: {
       ...initialValues,
-      image: initialValues.imageUrl ?? "",
+      image: initialValues.image ?? "",
     },
   });
 
@@ -67,9 +68,7 @@ export const EditWorkspaceForm = ({
     const ok = await confirmDelete();
     if (!ok) return;
     deleteWorkspace(
-      {
-        param: { workspaceId: initialValues.$id },
-      },
+      { workspaceId: initialValues._id },
       {
         onSuccess() {
           router.push("/");
@@ -81,20 +80,22 @@ export const EditWorkspaceForm = ({
     const ok = await confirmReset();
     if (!ok) return;
     resetInviteCode({
-      param: { workspaceId: initialValues.$id },
+      workspaceId: initialValues._id,
     });
   };
 
   const onSubmit = (values: z.infer<typeof updateWorkspacesSchema>) => {
-    const finalValues = {
-      ...values,
-      image: values?.image instanceof File ? values.image : "",
-    };
+    const formData = new FormData();
+    if (values.image instanceof File) {
+      formData.append("file", values.image);
+    }
+    formData.append("data", JSON.stringify({ name: values.name }));
     mutate(
-      { form: finalValues, param: { workspaceId: initialValues.$id } },
+      { _id: initialValues._id, formData },
       {
         onSuccess() {
-          form.reset();
+          form.reset(initialValues);
+          router.refresh();
           // router.push(`/workspaces/${data.$id}`);
           // onCancel?.();
         },
@@ -109,7 +110,7 @@ export const EditWorkspaceForm = ({
     }
   };
 
-  const fullInviteLink = `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`;
+  const fullInviteLink = `${window.location.origin}/workspaces/${initialValues._id}/join/${initialValues.inviteCode}`;
 
   const handleCopyInviteLink = () => {
     navigator.clipboard
@@ -129,7 +130,7 @@ export const EditWorkspaceForm = ({
             onClick={
               onCancel
                 ? onCancel
-                : () => router.push(`/workspaces/${initialValues.$id}`)
+                : () => router.push(`/workspaces/${initialValues._id}`)
             }
           >
             Back

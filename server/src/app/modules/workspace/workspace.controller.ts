@@ -27,6 +27,18 @@ const getUserWorkspaces = catchAsync(async (req, res) => {
   });
 });
 
+const getSingleWorkspace = catchAsync(async (req, res) => {
+  const result = await workspaceService.getSingleWorkspace(
+    req.params.workspaceId
+  );
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Workspace is retrieve successful",
+    data: result,
+  });
+});
+
 const updateWorkspace = catchAsync(async (req, res) => {
   const result = await workspaceService.updateWorkspace(
     req.params.workspaceId,
@@ -84,6 +96,7 @@ const joinWorkspace = catchAsync(async (req, res) => {
 export const workspaceController = {
   createWorkspace,
   getUserWorkspaces,
+  getSingleWorkspace,
   updateWorkspace,
   deleteWorkspace,
   resetInviteCode,

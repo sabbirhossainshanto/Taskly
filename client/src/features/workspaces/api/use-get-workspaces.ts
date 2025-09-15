@@ -1,15 +1,13 @@
-import { client } from "@/lib/rpc";
+import { AxiosSecure } from "@/lib/AxiosSecure";
+import { IResponse } from "@/types";
 import { useQuery } from "@tanstack/react-query";
+import { IWorkspace } from "../type";
 
 export const useGetWorkspaces = () => {
-  const query = useQuery({
+  const query = useQuery<unknown, Error, IResponse<IWorkspace[]>>({
     queryKey: ["workspaces"],
     queryFn: async () => {
-      const response = await client.api.workspaces.$get();
-      if (!response.ok) {
-        throw new Error("Failed to fetch workspaces");
-      }
-      const { data } = await response.json();
+      const { data } = await AxiosSecure.get(`/workspaces`);
       return data;
     },
   });
