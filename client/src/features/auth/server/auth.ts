@@ -6,7 +6,6 @@ import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { loginSchema, registerSchema } from "../schemas";
 import z from "zod";
-import { IResponse } from "@/types";
 import { IUser } from "../type";
 
 export const registerUser = async (payload: z.infer<typeof registerSchema>) => {
@@ -17,7 +16,7 @@ export const registerUser = async (payload: z.infer<typeof registerSchema>) => {
     cookiesStore.set("refreshToken", data?.data?.refreshToken);
     return data;
   } catch (error: any) {
-    return error.response.data;
+    throw new Error(error.response.data.message);
   }
 };
 
@@ -29,7 +28,7 @@ export const loginUser = async (payload: z.infer<typeof loginSchema>) => {
     cookiesStore.set("refreshToken", data?.data?.refreshToken);
     return data;
   } catch (error: any) {
-    return error.response.data;
+    throw new Error(error.response.data.message);
   }
 };
 export const logOut = async () => {
@@ -43,7 +42,7 @@ export const forgotPassword = async (payload: { email: string }) => {
     const { data } = await AxiosSecure.post("/auth/forgot-password", payload);
     return data;
   } catch (error: any) {
-    return error.response.data;
+    throw new Error(error.response.data.message);
   }
 };
 
@@ -75,6 +74,6 @@ export const getNewAccessToken = async () => {
     });
     return res.data;
   } catch (error: any) {
-    return error.response.data;
+    throw new Error(error.response.data.message);
   }
 };

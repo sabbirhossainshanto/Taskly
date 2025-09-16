@@ -42,20 +42,18 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectProps) => {
   });
 
   const onSubmit = (values: z.infer<typeof createProjectFormSchema>) => {
-    const finalValues = {
-      ...values,
-      workspaceId,
-      image: values?.image instanceof File ? values.image : "",
-    };
-    mutate(
-      { form: finalValues },
-      {
-        onSuccess({ data }) {
-          form.reset();
-          router.push(`/workspaces/${workspaceId}/projects/${data.$id}`);
-        },
-      }
-    );
+    const formData = new FormData();
+    if (values.image instanceof File) {
+      formData.append("file", values.image);
+    }
+
+    formData.append("data", JSON.stringify({ name: values.name, workspaceId }));
+    mutate(formData, {
+      onSuccess({ data }) {
+        form.reset();
+        router.push(`/workspaces/${workspaceId}/projects/${data._id}`);
+      },
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

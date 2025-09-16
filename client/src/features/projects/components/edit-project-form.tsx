@@ -25,13 +25,13 @@ import { cn } from "@/lib/utils";
 
 import { useConfirm } from "@/hooks/use-confirm";
 
-import { Project } from "../type";
 import { useUpdateProject } from "../api/use-update-project";
 import { useDeleteProject } from "../api/use-delete-project";
+import { IProject } from "../type";
 
 interface EditProjectProps {
   onCancel?: () => void;
-  initialValues: Project;
+  initialValues: IProject;
 }
 
 export const EditProjectForm = ({
@@ -54,7 +54,8 @@ export const EditProjectForm = ({
     resolver: zodResolver(updateProjectSchema),
     defaultValues: {
       ...initialValues,
-      image: initialValues.imageUrl ?? "",
+      image: initialValues.image ?? "",
+      workspaceId: initialValues.workspaceId._id,
     },
   });
 
@@ -63,26 +64,33 @@ export const EditProjectForm = ({
     if (!ok) return;
     deleteProject(
       {
-        param: { projectId: initialValues.$id },
+        projectId: initialValues._id,
       },
       {
         onSuccess() {
-          router.push(`/workspaces/${initialValues.workspaceId}`);
+          router.push(`/`);
         },
       }
     );
   };
 
   const onSubmit = (values: z.infer<typeof updateProjectSchema>) => {
-    const finalValues = {
-      ...values,
-      image: values?.image instanceof File ? values.image : "",
-    };
+    const formData = new FormData();
+    if (values.image instanceof File) {
+      formData.append("file", values.image);
+    }
+
+    formData.append(
+      "data",
+      JSON.stringify({ workspaceId: values.workspaceId, name: values.name })
+    );
+
     mutate(
-      { form: finalValues, param: { projectId: initialValues.$id } },
+      { formData, projectId: initialValues._id },
       {
         onSuccess() {
           form.reset();
+          router.refresh();
           // router.push(`/workspaces/${data.$id}`);
           // onCancel?.();
         },
@@ -111,7 +119,7 @@ export const EditProjectForm = ({
                 ? onCancel
                 : () =>
                     router.push(
-                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.$id}`
+                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues._id}`
                     )
             }
           >

@@ -1,7 +1,8 @@
-import { Models } from "node-appwrite";
+import { IWorkspace } from "../workspaces/type";
 
-export type Project = Models.Document & {
+export interface IProject {
+  _id: string;
   name: string;
-  imageUrl: string;
-  workspaceId: string;
-};
+  image: string;
+  workspaceId: IWorkspace;
+}

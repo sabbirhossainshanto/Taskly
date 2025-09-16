@@ -1,36 +1,30 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InferRequestType, InferResponseType } from "hono";
-
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
-type ResponseType = InferResponseType<
-  (typeof client.api.projects)[":projectId"]["$patch"],
-  200
->;
-type RequestType = InferRequestType<
-  (typeof client.api.projects)[":projectId"]["$patch"]
->;
+import { IResponse } from "@/types";
+import { IProject } from "../type";
+import { AxiosSecure } from "@/lib/AxiosSecure";
 
 export const useUpdateProject = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ form, param }) => {
-      const response = await client.api.projects[":projectId"]["$patch"]({
-        form,
-        param,
-      });
-      if (!response.ok) {
-        throw new Error("Failed to update project");
-      }
-      return response.json();
+  const mutation = useMutation<
+    IResponse<IProject>,
+    Error,
+    { formData: FormData; projectId: string }
+  >({
+    mutationFn: async ({ formData, projectId }) => {
+      const { data } = await AxiosSecure.patch(
+        `/projects/${projectId}`,
+        formData
+      );
+      return data;
     },
     onSuccess({ data }) {
       toast.success("Project updated");
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["projects"] });
-      queryClient.invalidateQueries({ queryKey: ["project", data.$id] });
+      queryClient.invalidateQueries({ queryKey: ["project", data._id] });
     },
     onError() {
       toast.error("Failed to update project");

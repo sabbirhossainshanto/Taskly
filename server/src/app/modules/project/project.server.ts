@@ -33,7 +33,7 @@ const createProject = async (
   return project;
 };
 
-export const getProjects = async (workspaceId: string, user: IUser) => {
+const getWorkspaceProjects = async (workspaceId: string, user: IUser) => {
   const member = await Member.findOne({
     workspaceId,
     userId: user._id,
@@ -52,7 +52,13 @@ export const getProjects = async (workspaceId: string, user: IUser) => {
   return workspaces;
 };
 
-export const updateProject = async (
+const getSingleProject = async (projectId: string, user: IUser) => {
+  const project = await Project.findById(projectId).populate("workspaceId");
+
+  return project;
+};
+
+const updateProject = async (
   projectId: string,
   payload: Partial<IProject>,
   file: Express.Multer.File,
@@ -87,7 +93,7 @@ export const updateProject = async (
   return project;
 };
 
-export const deleteProject = async (projectId: string, user: IUser) => {
+const deleteProject = async (projectId: string, user: IUser) => {
   const existingProject = await Project.findById(projectId);
 
   if (!existingProject) {
@@ -114,7 +120,8 @@ export const deleteProject = async (projectId: string, user: IUser) => {
 
 export const projectService = {
   createProject,
-  getProjects,
+  getWorkspaceProjects,
   updateProject,
   deleteProject,
+  getSingleProject,
 };

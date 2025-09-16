@@ -17,7 +17,12 @@ router.post(
   projectController.createProject
 );
 
-router.get("/:workspaceId", auth, projectController.getProject);
+router.get(
+  "/workspace/:workspaceId",
+  auth,
+  projectController.getWorkspaceProjects
+);
+router.get("/:projectId", auth, projectController.getSingleProject);
 
 router.patch(
   "/:projectId",

@@ -17,8 +17,8 @@ const createProject = catchAsync(async (req, res) => {
   });
 });
 
-const getProject = catchAsync(async (req, res) => {
-  const result = await projectService.getProjects(
+const getWorkspaceProjects = catchAsync(async (req, res) => {
+  const result = await projectService.getWorkspaceProjects(
     req.params.workspaceId,
     req.user
   );
@@ -26,6 +26,18 @@ const getProject = catchAsync(async (req, res) => {
     success: true,
     statusCode: httpStatus.OK,
     message: "Projects are retrieved successfully",
+    data: result,
+  });
+});
+const getSingleProject = catchAsync(async (req, res) => {
+  const result = await projectService.getSingleProject(
+    req.params.projectId,
+    req.user
+  );
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Project is retrieved successfully",
     data: result,
   });
 });
@@ -61,5 +73,6 @@ export const projectController = {
   createProject,
   deleteProject,
   updateProject,
-  getProject,
+  getWorkspaceProjects,
+  getSingleProject,
 };

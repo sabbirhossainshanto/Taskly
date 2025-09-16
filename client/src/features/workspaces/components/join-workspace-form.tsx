@@ -34,12 +34,12 @@ export const JoinWorkspaceForm = ({
   const onSubmit = () => {
     mutate(
       {
-        param: { workspaceId },
-        json: { code: inviteCode },
+        workspaceId,
+        inviteCode,
       },
       {
         onSuccess({ data }) {
-          router.push(`/workspaces/${data.$id}`);
+          router.push(`/workspaces/${data._id}`);
         },
       }
     );

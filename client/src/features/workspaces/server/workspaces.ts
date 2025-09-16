@@ -13,3 +13,15 @@ export const getWorkspaces = async (): Promise<IResponse<IWorkspace[]>> => {
     return error.response.data;
   }
 };
+export const getWorkspaceInfo = async ({
+  workspaceId,
+}: {
+  workspaceId: string;
+}): Promise<IResponse<IWorkspace>> => {
+  try {
+    const { data } = await AxiosSecure.get(`/workspaces/${workspaceId}`);
+    return data;
+  } catch (error: any) {
+    return error.response.data;
+  }
+};

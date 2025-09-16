@@ -25,10 +25,11 @@ export const useLogin = () => {
       router.push("/");
     },
     onError(error) {
+      console.log(error);
       if (error instanceof AxiosError) {
         toast.error(error.response?.data?.message);
       } else {
-        toast.error("Failed to login");
+        toast.error(error?.message);
       }
     },
   });

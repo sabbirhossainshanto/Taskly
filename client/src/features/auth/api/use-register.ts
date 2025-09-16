@@ -20,8 +20,8 @@ export const useRegister = () => {
       const { data } = await registerUser(payload);
       return data;
     },
-    onSuccess(data) {
-      toast.success(data.message);
+    onSuccess() {
+      toast.success("Registered successfully");
       queryClient.invalidateQueries({ queryKey: ["current"] });
       router.push("/");
     },
