@@ -169,7 +169,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceProps) => {
                 size="lg"
                 variant="secondary"
                 onClick={onCancel}
-                className={cn(!oncancel && "invisible")}
+                className={cn(!onCancel && "invisible")}
               >
                 Cancel
               </Button>

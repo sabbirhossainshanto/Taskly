@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { getCurrent } from "@/features/auth/server/auth";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { getProject } from "@/features/projects/server/route";
-import { TaskViewSwitcher } from "@/features/tasks/components/task-view-swicher";
+import { TaskViewSwitcher } from "@/features/tasks/components/task-view-switcher";
 import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";

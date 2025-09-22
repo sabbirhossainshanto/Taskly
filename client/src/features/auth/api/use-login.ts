@@ -19,8 +19,8 @@ export const useLogin = () => {
       const { data } = await loginUser(payload);
       return data;
     },
-    onSuccess(data) {
-      toast.success(data.message);
+    onSuccess() {
+      toast.success("login successful");
       queryClient.invalidateQueries({ queryKey: ["current", "workspaces"] });
       router.push("/");
     },
