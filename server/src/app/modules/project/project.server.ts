@@ -53,9 +53,21 @@ const getWorkspaceProjects = async (workspaceId: string, user: IUser) => {
 };
 
 const getSingleProject = async (projectId: string, user: IUser) => {
-  const project = await Project.findById(projectId).populate("workspaceId");
+  const project = await Project.findById(projectId);
 
-  return project;
+  const member = await Member.findOne({
+    workspaceId: project?.workspaceId,
+    userId: user?._id,
+  });
+
+  if (!member) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "You are not a member of this project"
+    );
+  }
+
+  return await Project.findById(projectId).populate("workspaceId");
 };
 
 const updateProject = async (

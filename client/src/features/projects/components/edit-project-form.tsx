@@ -85,17 +85,7 @@ export const EditProjectForm = ({
       JSON.stringify({ workspaceId: values.workspaceId, name: values.name })
     );
 
-    mutate(
-      { formData, projectId: initialValues._id },
-      {
-        onSuccess() {
-          form.reset();
-          router.refresh();
-          // router.push(`/workspaces/${data.$id}`);
-          // onCancel?.();
-        },
-      }
-    );
+    mutate({ formData, projectId: initialValues._id });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -91,7 +91,12 @@ const getSingleTask = async (taskId: string, user: IUser) => {
   const result = await Task.findById(taskId)
     .populate("workspace")
     .populate("project")
-    .populate("assignee");
+    .populate({
+      path: "assignee",
+      populate: {
+        path: "userId",
+      },
+    });
 
   return result;
 };

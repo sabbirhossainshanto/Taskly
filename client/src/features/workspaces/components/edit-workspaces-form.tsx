@@ -90,17 +90,7 @@ export const EditWorkspaceForm = ({
       formData.append("file", values.image);
     }
     formData.append("data", JSON.stringify({ name: values.name }));
-    mutate(
-      { _id: initialValues._id, formData },
-      {
-        onSuccess() {
-          form.reset(initialValues);
-          router.refresh();
-          // router.push(`/workspaces/${data.$id}`);
-          // onCancel?.();
-        },
-      }
-    );
+    mutate({ _id: initialValues._id, formData });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

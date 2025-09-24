@@ -1,13 +1,12 @@
 import { getCurrent } from "@/features/auth/server/auth";
-
 import { redirect } from "next/navigation";
-import { ProjectIdSettingsClient } from "./client";
+import { SingleTaskClient } from "./client";
 
-const ProjectIdSettingsPage = async () => {
+const SingleTaskPage = async () => {
   const user = await getCurrent();
   if (!user) redirect("/sign-in");
 
-  return <ProjectIdSettingsClient />;
+  return <SingleTaskClient />;
 };
 
-export default ProjectIdSettingsPage;
+export default SingleTaskPage;

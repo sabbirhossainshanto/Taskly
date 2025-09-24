@@ -20,6 +20,7 @@ export const useUpdateTask = () => {
     onSuccess(data) {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["task", data.data._id] });
     },
     onError(error) {
       if (error instanceof AxiosError) {

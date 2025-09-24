@@ -1,12 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { IResponse } from "@/types";
 import { IProject } from "../type";
 import { AxiosSecure } from "@/lib/AxiosSecure";
 
 export const useUpdateProject = () => {
-  const router = useRouter();
   const queryClient = useQueryClient();
   const mutation = useMutation<
     IResponse<IProject>,
@@ -22,7 +20,7 @@ export const useUpdateProject = () => {
     },
     onSuccess({ data }) {
       toast.success("Project updated");
-      router.refresh();
+
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       queryClient.invalidateQueries({ queryKey: ["project", data._id] });
     },
