@@ -71,8 +71,8 @@ export const columns: ColumnDef<ITask>[] = [
       const assignee = row.original.assignee;
       return (
         <div className="flex items-center gap-x-2 text-sm font-medium">
-          <ProjectAvatar className="size-6" name={assignee.name} />
-          <p className="line-clamp-1">{assignee.name} </p>
+          <ProjectAvatar className="size-6" name={assignee?.userId.name} />
+          <p className="line-clamp-1">{assignee?.userId.name} </p>
         </div>
       );
     },

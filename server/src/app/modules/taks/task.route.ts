@@ -12,7 +12,21 @@ router.post(
   validateRequest(taskValidation.createTaskSchema),
   taskController.createTask
 );
+router.post(
+  "/bulk-update",
+  auth,
+  validateRequest(taskValidation.bulkUpdateTaskSchema),
+  taskController.bulkUpdateTask
+);
 
 router.get("/", auth, taskController.getAllTasks);
+router.get("/:taskId", auth, taskController.getSingleTask);
+router.delete("/:taskId", auth, taskController.deleteTask);
+router.patch(
+  "/:taskId",
+  auth,
+  validateRequest(taskValidation.updateTaskSchema),
+  taskController.updateTask
+);
 
 export const taskRoutes = router;

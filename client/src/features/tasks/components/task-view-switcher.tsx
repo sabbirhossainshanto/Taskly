@@ -8,11 +8,21 @@ import { useCreateTaskModal } from "../hooks/use-create-task-modal";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useGetTasks } from "../api/use-get-tasks";
 import { useQueryState } from "nuqs";
-import { Fragment } from "react";
+import { Fragment, useCallback } from "react";
 import { DataFilters } from "./data-filters";
 import { useTaskFilters } from "../hooks/use-task-filters";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
+import { DataKanban } from "./data-kanban";
+import { TaskStatus } from "../types";
+import { useBulkUpdateTasks } from "../api/use-bulk-update-tasks";
+import { DataCalendar } from "./data-calendar";
+
+interface KanbanChangeProps {
+  _id: string;
+  status: TaskStatus;
+  position: number;
+}
 
 export const TaskViewSwitcher = () => {
   const [{ assignee, dueDate, projectId, searchTerm, status }] =
@@ -21,6 +31,7 @@ export const TaskViewSwitcher = () => {
     defaultValue: "table",
   });
   const { open } = useCreateTaskModal();
+  const { mutate: bulkUpdate } = useBulkUpdateTasks();
   const workspaceId = useWorkspaceId();
   const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({
     workspaceId,
@@ -30,6 +41,13 @@ export const TaskViewSwitcher = () => {
     searchTerm,
     status,
   });
+
+  const onKanbanChange = useCallback(
+    (tasks: KanbanChangeProps[]) => {
+      bulkUpdate({ tasks });
+    },
+    [bulkUpdate]
+  );
 
   return (
     <Tabs
@@ -68,10 +86,10 @@ export const TaskViewSwitcher = () => {
               <DataTable columns={columns} data={tasks?.data ?? []} />
             </TabsContent>
             <TabsContent value="kanban" className="mt-0">
-              {JSON.stringify(tasks)}
+              <DataKanban onChange={onKanbanChange} data={tasks?.data ?? []} />
             </TabsContent>
-            <TabsContent value="calender" className="mt-0">
-              {JSON.stringify(tasks)}
+            <TabsContent value="calender" className="mt-0 h-full pb-4">
+              <DataCalendar data={tasks?.data ?? []} />
             </TabsContent>
           </Fragment>
         )}

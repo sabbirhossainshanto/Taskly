@@ -2,9 +2,8 @@ import AppError from "../../errors/AppError";
 import { Member } from "../member/member.model";
 import { IUser } from "../user/user.interface";
 import httpStatus from "http-status";
-import { ITask } from "./task.interface";
+import { ITask, TaskStatus } from "./task.interface";
 import { Task } from "./task.model";
-import { taskSearchableField } from "./task.constant";
 
 const createTask = async (payload: ITask, user: IUser) => {
   const member = await Member.findOne({
@@ -60,12 +59,141 @@ const getAllTasks = async (query: Record<string, unknown>, user: IUser) => {
   const tasks = await Task.find()
     .populate("workspace")
     .populate("project")
-    .populate("assignee");
+    .populate({
+      path: "assignee",
+      populate: {
+        path: "userId",
+      },
+    });
 
   return tasks;
+};
+
+const getSingleTask = async (taskId: string, user: IUser) => {
+  const task = await Task.findById(taskId);
+
+  if (!task) {
+    throw new AppError(httpStatus.NOT_FOUND, "Task not found");
+  }
+
+  const member = await Member.findOne({
+    workspaceId: task.workspace,
+    userId: user._id,
+  });
+
+  if (!member) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "You are not a member of this workspace"
+    );
+  }
+
+  const result = await Task.findById(taskId)
+    .populate("workspace")
+    .populate("project")
+    .populate("assignee");
+
+  return result;
+};
+const deleteTask = async (taskId: string, user: IUser) => {
+  const task = await Task.findById(taskId);
+
+  if (!task) {
+    throw new AppError(httpStatus.NOT_FOUND, "Task not found");
+  }
+
+  const member = await Member.findOne({
+    userId: user._id,
+    workspaceId: task.workspace,
+  });
+
+  if (!member) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "You are not a member of this workspace"
+    );
+  }
+
+  const result = await Task.deleteOne({ _id: taskId });
+  return result;
+};
+
+const updateTask = async (payload: ITask, taskId: string, user: IUser) => {
+  const existingTask = await Task.findById(taskId);
+
+  if (!existingTask) {
+    throw new AppError(httpStatus.NOT_FOUND, "Task not found");
+  }
+
+  const member = await Member.findOne({
+    workspaceId: existingTask?.workspace,
+    userId: user._id,
+  });
+
+  if (!member) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "You are not a member of this workspace"
+    );
+  }
+
+  const task = await Task.findByIdAndUpdate(taskId, payload, { new: true });
+
+  return task;
+};
+
+const bulkUpdateTask = async (
+  payload: { tasks: { _id: string; status: TaskStatus; position: number }[] },
+  user: IUser
+) => {
+  const ids = payload.tasks.map((task) => task._id.toString());
+  const tasksToUpdate = await Task.find({
+    _id: { $in: ids },
+  });
+
+  const workspaceIds = new Set(
+    tasksToUpdate.map((task) => task.workspace.toString())
+  );
+
+  if (workspaceIds.size !== 1) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "All task must belong to the same workspace"
+    );
+  }
+
+  const workspaceId = workspaceIds.values().next().value;
+
+  const member = await Member.findOne({
+    workspaceId,
+    userId: user._id,
+  });
+
+  if (!member) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "You are not a member of this workspace"
+    );
+  }
+
+  const updatedTasks = await Promise.all(
+    payload.tasks.map((task) =>
+      Task.findByIdAndUpdate(
+        task._id,
+        { status: task.status, position: task.position },
+        { new: true }
+      )
+    )
+  );
+
+  return updatedTasks;
 };
 
 export const taskService = {
   createTask,
   getAllTasks,
+  getSingleTask,
+  deleteTask,
+  updateTask,
+  bulkUpdateTask,
 };

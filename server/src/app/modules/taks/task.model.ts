@@ -9,7 +9,7 @@ const taskSchema = new Schema<ITask>({
   assignee: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: "User",
+    ref: "Member",
   },
 
   description: {

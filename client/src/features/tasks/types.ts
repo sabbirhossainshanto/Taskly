@@ -1,4 +1,4 @@
-import { IUser } from "../auth/type";
+import { IMember } from "../members/types";
 import { IProject } from "../projects/type";
 import { IWorkspace } from "../workspaces/type";
 
@@ -15,7 +15,7 @@ export interface ITask {
   workspace: IWorkspace;
   name: string;
   project: IProject;
-  assignee: IUser;
+  assignee: IMember;
   description: string;
   dueDate: Date;
   position: number;
