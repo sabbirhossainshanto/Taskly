@@ -19,6 +19,11 @@ router.post(
 
 router.get("/", auth, workspaceController.getUserWorkspaces);
 router.get("/:workspaceId", auth, workspaceController.getSingleWorkspace);
+router.get(
+  "/:workspaceId/analytics",
+  auth,
+  workspaceController.getWorkspaceAnalytics
+);
 
 router.patch(
   "/:workspaceId",

@@ -41,6 +41,18 @@ const getSingleProject = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getProjectAnalytics = catchAsync(async (req, res) => {
+  const result = await projectService.getProjectAnalytics(
+    req.params.projectId,
+    req.user
+  );
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Project analytics retrieved successfully",
+    data: result,
+  });
+});
 
 const updateProject = catchAsync(async (req, res) => {
   const result = await projectService.updateProject(
@@ -75,4 +87,5 @@ export const projectController = {
   updateProject,
   getWorkspaceProjects,
   getSingleProject,
+  getProjectAnalytics,
 };

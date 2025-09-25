@@ -17,6 +17,7 @@ import { DataKanban } from "./data-kanban";
 import { TaskStatus } from "../types";
 import { useBulkUpdateTasks } from "../api/use-bulk-update-tasks";
 import { DataCalendar } from "./data-calendar";
+import { useProjectId } from "@/features/projects/hooks/use-project-id";
 
 interface KanbanChangeProps {
   _id: string;
@@ -39,11 +40,12 @@ export const TaskViewSwitcher = ({
   const { open } = useCreateTaskModal();
   const { mutate: bulkUpdate } = useBulkUpdateTasks();
   const workspaceId = useWorkspaceId();
+  const paramProjectId = useProjectId();
   const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({
     workspaceId,
     assignee,
     dueDate,
-    project: projectId,
+    project: paramProjectId || projectId,
     searchTerm,
     status,
   });

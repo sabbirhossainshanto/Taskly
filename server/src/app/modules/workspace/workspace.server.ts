@@ -1,3 +1,4 @@
+import { endOfMonth, startOfMonth, subMonths } from "date-fns";
 import AppError from "../../errors/AppError";
 import { fileUploader } from "../../utils/fileUploader";
 import { generateInviteCode } from "../../utils/generateInviteCode";
@@ -7,6 +8,8 @@ import { IUser } from "../user/user.interface";
 import { IWorkspace } from "./workspace.interface";
 import { Workspace } from "./workspace.model";
 import httpStatus from "http-status";
+import { TaskStatus } from "../taks/task.interface";
+import { Task } from "../taks/task.model";
 
 const createWorkspace = async (
   payload: IWorkspace,
@@ -45,6 +48,158 @@ export const getSingleWorkspace = async (workspaceId: string) => {
     throw new AppError(httpStatus.NOT_FOUND, "Workspace not found");
   }
   return workspace;
+};
+
+const getWorkspaceAnalytics = async (workspaceId: string, user: IUser) => {
+  const member = await Member.findOne({
+    workspaceId,
+    userId: user?._id,
+  });
+
+  if (!member) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "You are not a member of this project"
+    );
+  }
+
+  const now = new Date();
+  const thisMonthStart = startOfMonth(now);
+  const thisMonthEnd = endOfMonth(now);
+  const lastMonthStart = startOfMonth(subMonths(now, 1));
+  const lastMonthEnd = endOfMonth(subMonths(now, 1));
+
+  const thisMonthTask = await Task.find({
+    workspace: workspaceId,
+    createdAt: {
+      $gte: thisMonthStart.toISOString(),
+      $lte: thisMonthEnd.toISOString(),
+    },
+  });
+  const lastMonthTask = await Task.find({
+    workspace: workspaceId,
+    createdAt: {
+      $gte: lastMonthStart.toISOString(),
+      $lte: lastMonthEnd.toISOString(),
+    },
+  });
+
+  const taskCount = thisMonthTask.length;
+  const taskDifference = taskCount - lastMonthTask.length;
+
+  const thisMonthAssignedTasks = await Task.find({
+    workspace: workspaceId,
+    assignee: member._id,
+    createdAt: {
+      $gte: thisMonthStart.toISOString(),
+      $lte: thisMonthEnd.toISOString(),
+    },
+  });
+  const lastMonthAssignedTasks = await Task.find({
+    workspace: workspaceId,
+    assignee: member._id,
+    createdAt: {
+      $gte: lastMonthStart.toISOString(),
+      $lte: lastMonthEnd.toISOString(),
+    },
+  });
+
+  const assignedTaskCount = thisMonthAssignedTasks.length;
+  const assignedTaskDifference =
+    assignedTaskCount + lastMonthAssignedTasks.length;
+
+  const thisMonthIncompleteTasks = await Task.find({
+    workspace: workspaceId,
+    status: {
+      $ne: TaskStatus.DONE,
+    },
+    createdAt: {
+      $gte: thisMonthStart.toISOString(),
+      $lte: thisMonthEnd.toISOString(),
+    },
+  });
+  const lastMonthIncompleteTasks = await Task.find({
+    workspace: workspaceId,
+    status: {
+      $ne: TaskStatus.DONE,
+    },
+    createdAt: {
+      $gte: lastMonthStart.toISOString(),
+      $lte: lastMonthEnd.toISOString(),
+    },
+  });
+
+  const incompleteTaskCount = thisMonthIncompleteTasks.length;
+  const incompleteTaskDifference =
+    incompleteTaskCount - lastMonthIncompleteTasks.length;
+
+  const thisMonthCompletedTasks = await Task.find({
+    workspace: workspaceId,
+    status: {
+      $eq: TaskStatus.DONE,
+    },
+    createdAt: {
+      $gte: thisMonthStart.toISOString(),
+      $lte: thisMonthEnd.toISOString(),
+    },
+  });
+  const lastMonthCompletedTasks = await Task.find({
+    workspace: workspaceId,
+    status: {
+      $eq: TaskStatus.DONE,
+    },
+    createdAt: {
+      $gte: lastMonthStart.toISOString(),
+      $lte: lastMonthEnd.toISOString(),
+    },
+  });
+
+  const completedTaskCount = thisMonthCompletedTasks.length;
+  const completedTaskDifference =
+    completedTaskCount - lastMonthCompletedTasks.length;
+
+  const thisMonthOverdueTasks = await Task.find({
+    workspace: workspaceId,
+    status: {
+      $ne: TaskStatus.DONE,
+    },
+    dueDate: {
+      $lt: now.toISOString(),
+    },
+    createdAt: {
+      $gte: thisMonthStart.toISOString(),
+      $lte: thisMonthEnd.toISOString(),
+    },
+  });
+  const lastMonthOverdueTasks = await Task.find({
+    workspace: workspaceId,
+    status: {
+      $ne: TaskStatus.DONE,
+    },
+    dueDate: {
+      $lt: now.toISOString(),
+    },
+    createdAt: {
+      $gte: lastMonthStart.toISOString(),
+      $lte: lastMonthEnd.toISOString(),
+    },
+  });
+
+  const overdueTaskCount = thisMonthOverdueTasks.length;
+  const overdueTaskDifference = overdueTaskCount - lastMonthOverdueTasks.length;
+
+  return {
+    taskCount,
+    taskDifference,
+    assignedTaskCount,
+    assignedTaskDifference,
+    completedTaskCount,
+    completedTaskDifference,
+    incompleteTaskCount,
+    incompleteTaskDifference,
+    overdueTaskCount,
+    overdueTaskDifference,
+  };
 };
 
 export const updateWorkspace = async (
@@ -168,4 +323,5 @@ export const workspaceService = {
   resetInviteCode,
   joinWorkspace,
   getSingleWorkspace,
+  getWorkspaceAnalytics,
 };

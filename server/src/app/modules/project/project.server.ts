@@ -5,6 +5,9 @@ import { IUser } from "../user/user.interface";
 import httpStatus from "http-status";
 import { IProject } from "./project.interface";
 import { Project } from "./project.model";
+import { endOfMonth, startOfMonth, subMonths } from "date-fns";
+import { Task } from "../taks/task.model";
+import { TaskStatus } from "../taks/task.interface";
 
 const createProject = async (
   payload: IProject,
@@ -68,6 +71,159 @@ const getSingleProject = async (projectId: string, user: IUser) => {
   }
 
   return await Project.findById(projectId).populate("workspaceId");
+};
+const getProjectAnalytics = async (projectId: string, user: IUser) => {
+  const project = await Project.findById(projectId);
+
+  const member = await Member.findOne({
+    workspaceId: project?.workspaceId,
+    userId: user?._id,
+  });
+
+  if (!member) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "You are not a member of this project"
+    );
+  }
+
+  const now = new Date();
+  const thisMonthStart = startOfMonth(now);
+  const thisMonthEnd = endOfMonth(now);
+  const lastMonthStart = startOfMonth(subMonths(now, 1));
+  const lastMonthEnd = endOfMonth(subMonths(now, 1));
+
+  const thisMonthTask = await Task.find({
+    project: projectId,
+    createdAt: {
+      $gte: thisMonthStart.toISOString(),
+      $lte: thisMonthEnd.toISOString(),
+    },
+  });
+  const lastMonthTask = await Task.find({
+    project: projectId,
+    createdAt: {
+      $gte: lastMonthStart.toISOString(),
+      $lte: lastMonthEnd.toISOString(),
+    },
+  });
+
+  const taskCount = thisMonthTask.length;
+  const taskDifference = taskCount - lastMonthTask.length;
+
+  const thisMonthAssignedTasks = await Task.find({
+    project: projectId,
+    assignee: member._id,
+    createdAt: {
+      $gte: thisMonthStart.toISOString(),
+      $lte: thisMonthEnd.toISOString(),
+    },
+  });
+  const lastMonthAssignedTasks = await Task.find({
+    project: projectId,
+    assignee: member._id,
+    createdAt: {
+      $gte: lastMonthStart.toISOString(),
+      $lte: lastMonthEnd.toISOString(),
+    },
+  });
+
+  const assignedTaskCount = thisMonthAssignedTasks.length;
+  const assignedTaskDifference =
+    assignedTaskCount + lastMonthAssignedTasks.length;
+
+  const thisMonthIncompleteTasks = await Task.find({
+    project: projectId,
+    status: {
+      $ne: TaskStatus.DONE,
+    },
+    createdAt: {
+      $gte: thisMonthStart.toISOString(),
+      $lte: thisMonthEnd.toISOString(),
+    },
+  });
+  const lastMonthIncompleteTasks = await Task.find({
+    project: projectId,
+    status: {
+      $ne: TaskStatus.DONE,
+    },
+    createdAt: {
+      $gte: lastMonthStart.toISOString(),
+      $lte: lastMonthEnd.toISOString(),
+    },
+  });
+
+  const incompleteTaskCount = thisMonthIncompleteTasks.length;
+  const incompleteTaskDifference =
+    incompleteTaskCount - lastMonthIncompleteTasks.length;
+
+  const thisMonthCompletedTasks = await Task.find({
+    project: projectId,
+    status: {
+      $eq: TaskStatus.DONE,
+    },
+    createdAt: {
+      $gte: thisMonthStart.toISOString(),
+      $lte: thisMonthEnd.toISOString(),
+    },
+  });
+  const lastMonthCompletedTasks = await Task.find({
+    project: projectId,
+    status: {
+      $eq: TaskStatus.DONE,
+    },
+    createdAt: {
+      $gte: lastMonthStart.toISOString(),
+      $lte: lastMonthEnd.toISOString(),
+    },
+  });
+
+  const completedTaskCount = thisMonthCompletedTasks.length;
+  const completedTaskDifference =
+    completedTaskCount - lastMonthCompletedTasks.length;
+
+  const thisMonthOverdueTasks = await Task.find({
+    project: projectId,
+    status: {
+      $ne: TaskStatus.DONE,
+    },
+    dueDate: {
+      $lt: now.toISOString(),
+    },
+    createdAt: {
+      $gte: thisMonthStart.toISOString(),
+      $lte: thisMonthEnd.toISOString(),
+    },
+  });
+  const lastMonthOverdueTasks = await Task.find({
+    project: projectId,
+    status: {
+      $ne: TaskStatus.DONE,
+    },
+    dueDate: {
+      $lt: now.toISOString(),
+    },
+    createdAt: {
+      $gte: lastMonthStart.toISOString(),
+      $lte: lastMonthEnd.toISOString(),
+    },
+  });
+
+  const overdueTaskCount = thisMonthOverdueTasks.length;
+  const overdueTaskDifference = overdueTaskCount - lastMonthOverdueTasks.length;
+
+  return {
+    taskCount,
+    taskDifference,
+    assignedTaskCount,
+    assignedTaskDifference,
+    completedTaskCount,
+    completedTaskDifference,
+    incompleteTaskCount,
+    incompleteTaskDifference,
+    overdueTaskCount,
+    overdueTaskDifference,
+  };
 };
 
 const updateProject = async (
@@ -136,4 +292,5 @@ export const projectService = {
   updateProject,
   deleteProject,
   getSingleProject,
+  getProjectAnalytics,
 };

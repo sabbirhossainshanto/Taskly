@@ -37,7 +37,7 @@ export const DataFilters = ({ hideProjectFilter }: DataFiltersProps) => {
     label: member.workspaceId.name,
   }));
 
-  const [{ assignee, dueDate, projectId, searchTerm, status }, setFilters] =
+  const [{ assignee, dueDate, projectId, status }, setFilters] =
     useTaskFilters();
 
   const onStatusChange = (value: string) => {

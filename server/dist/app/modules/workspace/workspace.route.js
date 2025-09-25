@@ -1,0 +1,23 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.workspaceRoutes = void 0;
+const express_1 = require("express");
+const validateRequest_1 = __importDefault(require("../../middlewares/validateRequest"));
+const workspace_validation_1 = require("./workspace.validation");
+const workspace_controller_1 = require("./workspace.controller");
+const convertToJson_1 = __importDefault(require("../../middlewares/convertToJson"));
+const fileUploader_1 = require("../../utils/fileUploader");
+const auth_1 = __importDefault(require("../../middlewares/auth"));
+const router = (0, express_1.Router)();
+router.post("/create-workspace", auth_1.default, fileUploader_1.fileUploader.upload.single("file"), convertToJson_1.default, (0, validateRequest_1.default)(workspace_validation_1.workspaceValidation.createWorkspacesSchema), workspace_controller_1.workspaceController.createWorkspace);
+router.get("/", auth_1.default, workspace_controller_1.workspaceController.getUserWorkspaces);
+router.get("/:workspaceId", auth_1.default, workspace_controller_1.workspaceController.getSingleWorkspace);
+router.get("/:workspaceId/analytics", auth_1.default, workspace_controller_1.workspaceController.getWorkspaceAnalytics);
+router.patch("/:workspaceId", auth_1.default, fileUploader_1.fileUploader.upload.single("file"), convertToJson_1.default, (0, validateRequest_1.default)(workspace_validation_1.workspaceValidation.updateWorkspacesSchema), workspace_controller_1.workspaceController.updateWorkspace);
+router.delete("/:workspaceId", auth_1.default, workspace_controller_1.workspaceController.deleteWorkspace);
+router.post("/:workspaceId/join", auth_1.default, workspace_controller_1.workspaceController.joinWorkspace);
+router.post("/:workspaceId", auth_1.default, workspace_controller_1.workspaceController.resetInviteCode);
+exports.workspaceRoutes = router;

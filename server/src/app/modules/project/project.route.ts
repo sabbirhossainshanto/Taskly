@@ -24,6 +24,12 @@ router.get(
 );
 router.get("/:projectId", auth, projectController.getSingleProject);
 
+router.get(
+  "/:projectId/analytics",
+  auth,
+  projectController.getProjectAnalytics
+);
+
 router.patch(
   "/:projectId",
   auth,

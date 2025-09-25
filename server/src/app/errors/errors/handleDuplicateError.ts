@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TErrorSources, TGenericErrorResponse } from '../interface/errors';
+
+import { TErrorSources, TGenericErrorResponse } from "../../interface/errors";
 
 const handleDuplicateError = (err: any): TGenericErrorResponse => {
   const match = err.message.match(/"([^"]*)"/);
@@ -12,7 +13,7 @@ const handleDuplicateError = (err: any): TGenericErrorResponse => {
   ];
   return {
     errorSources,
-    message: 'Validation error',
+    message: "Validation error",
     statusCode: 400,
   };
 };
