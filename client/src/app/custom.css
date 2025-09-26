@@ -1,0 +1,32 @@
+.login-page-new__main-bg {
+  background: url(/login__bg.svg) center 10px no-repeat;
+  background-size: cover;
+  height: calc(100% - 17vh);
+  left: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  top: 17vh;
+  width: 100%;
+}
+
+.login-page-new__main-bg:before {
+  content: "";
+  display: block;
+  position: absolute;
+  background: url(/login__bg-dots.svg);
+  height: 300%;
+  left: -50%;
+  top: -100%;
+  transform: rotate(-28deg);
+  width: 200%;
+}
+
+.login-page-new__main-bg:after {
+  content: "";
+  display: block;
+  position: absolute;
+  background: url(/login__bg-top.svg) center top no-repeat;
+  background-size: 100%;
+  inset: 0;
+}

@@ -1,14 +1,7 @@
 "use client";
 
-import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
@@ -21,10 +14,12 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { registerSchema } from "../schemas";
 import { useRegister } from "../api/use-register";
+import { Divider } from "@/components/divider";
 
 export const SignUpCard = () => {
   const { mutate, isPending } = useRegister();
@@ -41,90 +36,13 @@ export const SignUpCard = () => {
     mutate(values);
   };
   return (
-    <Card className="w-full h-full md:w-[487px] border-none shadow-none">
-      <CardHeader className="flex flex-col items-center justify-center text-center p-7">
-        <CardTitle className="text-2xl">Sign Up</CardTitle>
-        <CardDescription>
-          By signing up, you are agree to our{" "}
-          <Link href="/privacy">
-            <span className="text-blue-700">Privacy Policy</span>{" "}
-          </Link>{" "}
-          and{" "}
-          <Link href="/privacy">
-            <span className="text-blue-700">Terms of service</span>
-          </Link>
-        </CardDescription>
+    <Card className="w-full h-full md:w-[487px] border-none shadow-none z-10">
+      <CardHeader className="flex flex-col items-center justify-center text-center px-7">
+        <CardTitle className="text-2xl lg:text-3xl font-bold">
+          Seconds to sign up!
+        </CardTitle>
       </CardHeader>
-      <div className="px-7">
-        <DottedSeparator />
-      </div>
-      <CardContent className="p-7">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              name="name"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="name"
-                      placeholder="Enter your name"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="email"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="email"
-                      placeholder="Enter email address"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="password"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder="Enter password"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isPending}
-              size="lg"
-            >
-              Sign up
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-      <div className="px-7">
-        <DottedSeparator />
-      </div>
-      <CardContent className="p-7 flex flex-col gap-y-4">
+      <CardContent className="px-7 flex flex-col gap-y-3">
         <Button
           disabled={isPending}
           variant="secondary"
@@ -144,10 +62,77 @@ export const SignUpCard = () => {
           Login with Github
         </Button>
       </CardContent>
-      <div className="px-7">
-        <DottedSeparator />
-      </div>
-      <CardContent className="p-7 flex items-center justify-center">
+      <Divider className="px-7" />
+      <CardContent className="px-7">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              name="name"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="pl-1 text-[12px]">Full Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="name"
+                      placeholder="Enter your name"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="email"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="pl-1 text-[12px]">Work Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="email"
+                      placeholder="Enter your work email"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="password"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="pl-1 text-[12px]">
+                    Choose Password
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder="Enter password"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isPending}
+              size="lg"
+            >
+              Sign up with Email
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+
+      <CardContent className="px-7 flex items-center justify-center">
         <p>
           Already have an account ?
           <Link href="/sign-in">

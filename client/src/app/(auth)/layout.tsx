@@ -14,17 +14,29 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
   const isSignIn = pathname === "/sign-in";
 
   return (
-    <main className="bg-neutral-100 min-h-screen">
-      <div className="mx-auto max-w-screen-2xl p-4">
+    <main className="bg-neutral-50 min-h-screen bg-">
+      <div className="mx-auto max-w-screen-2xl p-2 lg:p-4">
         <nav className="flex justify-between items-center">
           <Image src="/logo.svg" height={56} width={152} alt="logo" />
-          <Button asChild variant="secondary">
-            <Link href={isSignIn ? "/sign-up" : "/sign-in"}>
-              {isSignIn ? "Sign UP" : "Sign In"}
-            </Link>
-          </Button>
+          <div className="flex items-center gap-x-3">
+            {isSignIn ? (
+              <p className="font-medium text-base text-neutral-900 hidden lg:block">
+                Don&apos;t have an account?
+              </p>
+            ) : (
+              <p className="font-medium text-base text-neutral-900 hidden lg:block">
+                Already playing with Taskly?
+              </p>
+            )}
+            <Button asChild variant="primary">
+              <Link href={isSignIn ? "/sign-up" : "/sign-in"}>
+                {isSignIn ? "Sign UP" : "Sign In"}
+              </Link>
+            </Button>
+          </div>
         </nav>
-        <div className="flex flex-col items-center justify-center pt-4 md:pt-14">
+        <div className="flex flex-col items-center justify-center pt-4 md:pt-14 ">
+          <div className="login-page-new__main-bg hidden lg:block"></div>
           {children}
         </div>
       </div>
