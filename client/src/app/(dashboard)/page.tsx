@@ -9,9 +9,7 @@ export default async function Home() {
 
   const data = await getWorkspaces();
 
-  if (!data?.data || data?.data?.length === 0) {
-    redirect("workspaces/create");
-  } else {
-    redirect(`/workspaces/${data?.data[0]._id}`);
-  }
+  if (!data?.data || data?.data?.length === 0) redirect("/workspaces/create");
+
+  redirect(`/workspaces/${data?.data?.[0]._id}`);
 }

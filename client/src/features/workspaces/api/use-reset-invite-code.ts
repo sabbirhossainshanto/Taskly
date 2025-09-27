@@ -23,7 +23,6 @@ export const useResetInviteCode = () => {
       queryClient.invalidateQueries({ queryKey: ["workspace", data.data._id] });
     },
     onError(error) {
-      console.log(error);
       if (error instanceof AxiosError) {
         toast.error(error.response?.data?.message);
       } else {

@@ -15,5 +15,6 @@ router.post(
   validateRequest(authValidation.loginValidation),
   authController.loginMember
 );
+router.post("/logout", authController.logOut);
 
 export const AuthRoutes = router;

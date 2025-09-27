@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import z from "zod";
 import { registerSchema } from "../schemas";
 import { AxiosError } from "axios";
-import { registerUser } from "../server/auth";
+import { AxiosSecure } from "@/lib/AxiosSecure";
 
 export const useRegister = () => {
   const router = useRouter();
@@ -17,7 +17,7 @@ export const useRegister = () => {
   >({
     mutationKey: ["register"],
     mutationFn: async (payload) => {
-      const { data } = await registerUser(payload);
+      const { data } = await AxiosSecure.post("/auth/register", payload);
       return data;
     },
     onSuccess() {

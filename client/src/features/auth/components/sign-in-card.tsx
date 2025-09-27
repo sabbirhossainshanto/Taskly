@@ -113,7 +113,7 @@ export const SignInCard = () => {
         </Form>
       </CardContent>
 
-      <CardContent className="p-7 flex items-center justify-center">
+      <CardContent className="px-7 flex items-center justify-center">
         <p>
           Don&apos;t have an account ?
           <Link href="/sign-up">

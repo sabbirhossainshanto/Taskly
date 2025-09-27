@@ -14,6 +14,7 @@ import { useLogout } from "../api/use-logout";
 
 export const UserButton = () => {
   const { data: user, isLoading } = useCurrent();
+
   const { mutate: logout } = useLogout();
 
   if (isLoading) {

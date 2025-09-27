@@ -80,8 +80,6 @@ const updateWorkspaceMember = async (
     workspaceId,
   });
 
-  console.log(isAdmin);
-
   if (isAdmin?.role !== USER_ROLE.admin) {
     throw new AppError(httpStatus.BAD_REQUEST, "You are unauthorized");
   }

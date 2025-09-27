@@ -6,6 +6,7 @@ import z from "zod";
 import { loginSchema } from "../schemas";
 import { AxiosError } from "axios";
 import { loginUser } from "../server/auth";
+import { AxiosSecure } from "@/lib/AxiosSecure";
 
 export const useLogin = () => {
   const router = useRouter();
@@ -16,7 +17,7 @@ export const useLogin = () => {
     z.infer<typeof loginSchema>
   >({
     mutationFn: async (payload) => {
-      const { data } = await loginUser(payload);
+      const { data } = await AxiosSecure.post("/auth/login", payload);
       return data;
     },
     onSuccess() {
@@ -25,7 +26,6 @@ export const useLogin = () => {
       router.push("/");
     },
     onError(error) {
-      console.log(error);
       if (error instanceof AxiosError) {
         toast.error(error.response?.data?.message);
       } else {
