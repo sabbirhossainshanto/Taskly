@@ -6,8 +6,8 @@ import httpStatus from "http-status";
 import { IProject } from "./project.interface";
 import { Project } from "./project.model";
 import { endOfMonth, startOfMonth, subMonths } from "date-fns";
-import { Task } from "../taks/task.model";
-import { TaskStatus } from "../taks/task.interface";
+import { Task } from "../task/task.model";
+import { TaskStatus } from "../task/task.interface";
 
 const createProject = async (
   payload: IProject,
@@ -72,6 +72,7 @@ const getSingleProject = async (projectId: string, user: IUser) => {
 
   return await Project.findById(projectId).populate("workspaceId");
 };
+
 const getProjectAnalytics = async (projectId: string, user: IUser) => {
   const project = await Project.findById(projectId);
 
@@ -283,7 +284,11 @@ const deleteProject = async (projectId: string, user: IUser) => {
   const deletedProject = await Project.deleteOne({
     _id: projectId,
   });
-  return deletedProject;
+  return {
+    ...deletedProject,
+    project: existingProject?._id,
+    workspace: existingProject?.workspaceId,
+  };
 };
 
 export const projectService = {

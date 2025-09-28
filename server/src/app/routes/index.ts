@@ -4,7 +4,7 @@ import { memberRoutes } from "../modules/member/member.route";
 import { workspaceRoutes } from "../modules/workspace/workspace.route";
 import { projectRoutes } from "../modules/project/project.route";
 import { userRoutes } from "../modules/user/user.route";
-import { taskRoutes } from "../modules/taks/task.route";
+import { taskRoutes } from "../modules/task/task.route";
 
 const router = Router();
 

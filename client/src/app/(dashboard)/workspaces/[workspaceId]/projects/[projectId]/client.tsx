@@ -14,7 +14,7 @@ import Link from "next/link";
 
 export const ProjectIdClient = () => {
   const projectId = useProjectId();
-  const { data: projects, isLoading: isLoadingProjects } = useGetProject({
+  const { data: project, isLoading: isLoadingProjects } = useGetProject({
     projectId,
   });
   const { data: projectAnalytics, isLoading: isLoadingProjectAnalytics } =
@@ -26,24 +26,25 @@ export const ProjectIdClient = () => {
     return <PageLoader />;
   }
 
-  if (!projects?.data) {
+  if (!project?.data) {
     return <PageError message="Project not found" />;
   }
+
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-x-2">
           <ProjectAvatar
-            name={projects?.data?.name}
-            image={projects?.data?.image}
+            name={project?.data?.name}
+            image={project?.data?.image}
             className="size-8"
           />
-          <p className="text-lg font-semibold">{projects.data?.name}</p>
+          <p className="text-lg font-semibold">{project.data?.name}</p>
         </div>
         <div>
           <Button variant="secondary" size="sm" asChild>
             <Link
-              href={`/workspaces/${projects.data?.workspaceId._id}/projects/${projects.data?._id}/settings`}
+              href={`/workspaces/${project.data?.workspaceId._id}/projects/${project.data?._id}/settings`}
             >
               <PencilIcon className="size-4 mr-2" />
               Edit Project

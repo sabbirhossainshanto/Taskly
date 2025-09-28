@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
 import { z } from "zod";
@@ -20,6 +19,7 @@ import {
 import { registerSchema } from "../schemas";
 import { useRegister } from "../api/use-register";
 import { Divider } from "@/components/divider";
+import GoogleLoginButton from "./google-login-button";
 
 export const SignUpCard = () => {
   const { mutate, isPending } = useRegister();
@@ -43,15 +43,7 @@ export const SignUpCard = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="px-7 flex flex-col gap-y-3">
-        <Button
-          disabled={isPending}
-          variant="secondary"
-          size="lg"
-          className="w-full"
-        >
-          <FcGoogle className="mr-2 size-5" />
-          Login with Google
-        </Button>
+        <GoogleLoginButton />
         <Button
           disabled={isPending}
           variant="secondary"

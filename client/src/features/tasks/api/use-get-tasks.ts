@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ITask, TaskStatus } from "../types";
 
 interface UseGetTasksProps {
-  workspaceId: string;
+  workspace: string;
   project?: string | null;
   status?: TaskStatus | null;
   assignee?: string | null;
@@ -13,17 +13,17 @@ interface UseGetTasksProps {
 }
 
 export const useGetTasks = ({
-  workspaceId,
+  workspace,
   assignee,
   dueDate,
   project,
   searchTerm,
   status,
 }: UseGetTasksProps) => {
-  const query = useQuery<{ workspaceId: string }, Error, IResponse<ITask[]>>({
+  const query = useQuery<{ workspace: string }, Error, IResponse<ITask[]>>({
     queryKey: [
       "tasks",
-      workspaceId,
+      workspace,
       assignee,
       dueDate,
       project,
@@ -32,8 +32,8 @@ export const useGetTasks = ({
     ],
     queryFn: async () => {
       const params = new URLSearchParams();
-      if (workspaceId) {
-        params.append("workspaceId", workspaceId);
+      if (workspace) {
+        params.append("workspace", workspace);
       }
       if (assignee) {
         params.append("assignee", assignee);

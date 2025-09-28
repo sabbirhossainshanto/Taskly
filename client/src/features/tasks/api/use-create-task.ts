@@ -16,6 +16,9 @@ export const useCreateTask = () => {
     onSuccess(data) {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({
+        queryKey: ["project-analytics", data?.data?.project],
+      });
     },
     onError(error) {
       if (error instanceof AxiosError) {

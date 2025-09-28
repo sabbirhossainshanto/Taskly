@@ -5,6 +5,7 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
+  image?: string;
   role: keyof typeof USER_ROLE;
   _id: Types.ObjectId;
 }

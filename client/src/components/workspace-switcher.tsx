@@ -18,6 +18,7 @@ export const WorkspaceSwitcher = () => {
   const workspaceId = useWorkspaceId();
   const router = useRouter();
   const { data: workspaces } = useGetWorkspaces();
+
   const { open } = useCreateWorkspaceModal();
 
   const onSelect = (id: string) => {

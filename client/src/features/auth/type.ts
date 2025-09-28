@@ -14,4 +14,5 @@ export interface IUser {
   iat: number;
   name: string;
   role: IUserRole;
+  image?: string;
 }

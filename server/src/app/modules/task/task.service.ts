@@ -32,9 +32,19 @@ const createTask = async (payload: ITask, user: IUser) => {
   return task;
 };
 
-const getAllTasks = async (query: Record<string, unknown>, user: IUser) => {
+const getAllTasks = async (
+  query: {
+    workspace?: string;
+    assignee?: string;
+    dueDate?: string;
+    project?: string;
+    searchTerm?: string;
+    status?: TaskStatus;
+  },
+  user: IUser
+) => {
   const member = await Member.findOne({
-    workspaceId: query.workspaceId,
+    workspaceId: query.workspace,
     userId: user._id,
   });
 
@@ -45,18 +55,32 @@ const getAllTasks = async (query: Record<string, unknown>, user: IUser) => {
     );
   }
 
-  const queryObj = { ...query };
-  let searchTerm = "";
-  if (query?.searchTerm) {
-    searchTerm = query.searchTerm as string;
+  const queryObj: {
+    workspace?: string;
+    assignee?: string;
+    dueDate?: string;
+    project?: string;
+    searchTerm?: string;
+    status?: TaskStatus;
+  } = {};
+
+  if (query.workspace) {
+    queryObj.workspace = query.workspace;
   }
-  // {
-  //     $or: taskSearchableField.map((filed) => ({
-  //       [filed]: { $regex: searchTerm, $options: "i" },
-  //     })),
-  //   }
-  /* search query */
-  const tasks = await Task.find()
+  if (query.assignee) {
+    queryObj.assignee = query.assignee;
+  }
+  if (query.dueDate) {
+    queryObj.dueDate = query.dueDate;
+  }
+  if (query.project) {
+    queryObj.project = query.project;
+  }
+  if (query.status) {
+    queryObj.status = query.status;
+  }
+
+  const tasks = await Task.find(queryObj)
     .populate("workspace")
     .populate("project")
     .populate({
@@ -120,7 +144,12 @@ const deleteTask = async (taskId: string, user: IUser) => {
   }
 
   const result = await Task.deleteOne({ _id: taskId });
-  return result;
+  return {
+    ...result,
+    project: task?.project,
+    assignee: task?.assignee,
+    workspace: task?.workspace,
+  };
 };
 
 const updateTask = async (payload: ITask, taskId: string, user: IUser) => {

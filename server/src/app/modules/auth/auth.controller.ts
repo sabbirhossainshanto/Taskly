@@ -23,7 +23,7 @@ const registerMember = catchAsync(async (req, res) => {
     statusCode: 200,
     success: true,
     message: "Registered successful",
-    data: { accessToken, refreshToken },
+    data: null,
   });
 });
 const loginMember = catchAsync(async (req, res) => {
@@ -44,7 +44,30 @@ const loginMember = catchAsync(async (req, res) => {
     statusCode: 200,
     success: true,
     message: "Login successful",
-    data: { accessToken, refreshToken },
+    data: null,
+  });
+});
+const loginWithGoogle = catchAsync(async (req, res) => {
+  const { accessToken, refreshToken } = await authService.loginWithGoogle(
+    req.body
+  );
+  res.cookie("accessToken", accessToken, {
+    secure: config.NODE_ENV === "production",
+    httpOnly: true,
+    sameSite: "strict",
+    path: "/",
+  });
+  res.cookie("refreshToken", refreshToken, {
+    secure: config.NODE_ENV === "production",
+    httpOnly: true,
+    sameSite: "strict",
+    path: "/",
+  });
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Login successful",
+    data: null,
   });
 });
 const logOut = catchAsync(async (req, res) => {
@@ -73,4 +96,5 @@ export const authController = {
   registerMember,
   loginMember,
   logOut,
+  loginWithGoogle,
 };

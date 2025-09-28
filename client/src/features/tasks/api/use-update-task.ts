@@ -21,6 +21,9 @@ export const useUpdateTask = () => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["task", data.data._id] });
+      queryClient.invalidateQueries({
+        queryKey: ["project-analytics", data?.data?.project],
+      });
     },
     onError(error) {
       if (error instanceof AxiosError) {

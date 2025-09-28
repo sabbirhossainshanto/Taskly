@@ -7,6 +7,7 @@ interface ITokenPayload {
   name: string;
   _id: Types.ObjectId;
   role: IUserRole;
+  image?: string;
 }
 
 export const generateToken = (

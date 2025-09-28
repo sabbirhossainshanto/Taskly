@@ -8,8 +8,8 @@ import { IUser } from "../user/user.interface";
 import { IWorkspace } from "./workspace.interface";
 import { Workspace } from "./workspace.model";
 import httpStatus from "http-status";
-import { TaskStatus } from "../taks/task.interface";
-import { Task } from "../taks/task.model";
+import { TaskStatus } from "../task/task.interface";
+import { Task } from "../task/task.model";
 
 const createWorkspace = async (
   payload: IWorkspace,

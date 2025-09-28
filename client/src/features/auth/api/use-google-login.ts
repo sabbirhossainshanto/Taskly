@@ -2,21 +2,21 @@ import { IResponse } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import z from "zod";
-import { loginSchema } from "../schemas";
 import { AxiosError } from "axios";
 import { AxiosSecure } from "@/lib/AxiosSecure";
 
-export const useLogin = () => {
+export const useGoogleLogin = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const mutation = useMutation<
     IResponse<{ accessToken: string; refreshToken: string }>,
     Error,
-    z.infer<typeof loginSchema>
+    { token: string }
   >({
-    mutationFn: async (payload) => {
-      const { data } = await AxiosSecure.post("/auth/login", payload);
+    mutationFn: async ({ token }) => {
+      const { data } = await AxiosSecure.post("/auth/login-with-google", {
+        token,
+      });
       return data;
     },
     onSuccess() {

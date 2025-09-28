@@ -5,6 +5,9 @@ import config from "../../config";
 import { generateToken } from "../../utils/generateToken";
 import { User } from "../user/user.model";
 import { IUser } from "../user/user.interface";
+import { verifyToken } from "../../utils/verifyToken";
+import { verifyGoogleToken } from "../../utils/verifyGoogleToken";
+import { TokenPayload } from "google-auth-library";
 
 const resisterMember = async (payload: IUser) => {
   const isAlreadyExist = await User.findOne({
@@ -78,8 +81,71 @@ const loginMember = async (payload: IUser) => {
   );
   return { accessToken, refreshToken };
 };
+const loginWithGoogle = async (payload: { token: string }) => {
+  if (!payload.token) {
+    throw new AppError(httpStatus.BAD_REQUEST, "You are not authorized");
+  }
+
+  const { email, name, picture } = (await verifyGoogleToken(
+    payload.token
+  )) as TokenPayload;
+
+  const user = await User.findOne({
+    email,
+    name,
+  });
+
+  if (!user) {
+    const newUser = await User.create({
+      email,
+      name,
+      role: "member",
+      image: picture,
+    });
+    const tokenObj = {
+      name: newUser.name,
+      email: newUser.email,
+      _id: newUser?._id,
+      role: newUser?.role,
+      image: newUser?.image,
+    };
+
+    const accessToken = generateToken(
+      tokenObj,
+      config.jwt_access_secret as string,
+      config.jwt_access_expires_in as string
+    );
+    const refreshToken = generateToken(
+      tokenObj,
+      config.jwt_refresh_secret as string,
+      config.jwt_refresh_expires_in as string
+    );
+    return { accessToken, refreshToken };
+  }
+
+  const tokenObj = {
+    name: user.name,
+    email: user.email,
+    _id: user?._id,
+    role: user?.role,
+    image: user?.image,
+  };
+
+  const accessToken = generateToken(
+    tokenObj,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string
+  );
+  const refreshToken = generateToken(
+    tokenObj,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string
+  );
+  return { accessToken, refreshToken };
+};
 
 export const authService = {
   resisterMember,
   loginMember,
+  loginWithGoogle,
 };
