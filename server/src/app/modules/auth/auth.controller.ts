@@ -8,16 +8,18 @@ const registerMember = catchAsync(async (req, res) => {
     req.body
   );
   res.cookie("accessToken", accessToken, {
-    secure: config.NODE_ENV === "production",
+    secure: true,
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "none",
     path: "/",
+    maxAge: 24 * 60 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
-    secure: config.NODE_ENV === "production",
+    secure: true,
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "none",
     path: "/",
+    maxAge: 24 * 60 * 60 * 1000,
   });
   sendResponse(res, {
     statusCode: 200,
@@ -29,16 +31,18 @@ const registerMember = catchAsync(async (req, res) => {
 const loginMember = catchAsync(async (req, res) => {
   const { accessToken, refreshToken } = await authService.loginMember(req.body);
   res.cookie("accessToken", accessToken, {
-    secure: config.NODE_ENV === "production",
+    secure: true,
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "none",
     path: "/",
+    maxAge: 24 * 60 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
-    secure: config.NODE_ENV === "production",
+    secure: true,
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "none",
     path: "/",
+    maxAge: 24 * 60 * 60 * 1000,
   });
   sendResponse(res, {
     statusCode: 200,
@@ -52,16 +56,18 @@ const loginWithGoogle = catchAsync(async (req, res) => {
     req.body
   );
   res.cookie("accessToken", accessToken, {
-    secure: config.NODE_ENV === "production",
+    secure: true,
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "none",
     path: "/",
+    maxAge: 24 * 60 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
-    secure: config.NODE_ENV === "production",
+    secure: true,
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "none",
     path: "/",
+    maxAge: 24 * 60 * 60 * 1000,
   });
   sendResponse(res, {
     statusCode: 200,
@@ -73,15 +79,15 @@ const loginWithGoogle = catchAsync(async (req, res) => {
 const logOut = catchAsync(async (req, res) => {
   res.clearCookie("accessToken", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: true,
+    sameSite: "none",
     path: "/",
   });
 
   res.clearCookie("refreshToken", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: true,
+    sameSite: "none",
     path: "/",
   });
   sendResponse(res, {

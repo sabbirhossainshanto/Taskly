@@ -31,8 +31,6 @@ export const UserButton = () => {
 
   const { name, email, image } = user.data;
 
-  console.log(image);
-
   const avatarFallback = name
     ? name.charAt(0).toUpperCase()
     : email.charAt(0) ?? "U";

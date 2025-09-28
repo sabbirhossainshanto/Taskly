@@ -21,7 +21,7 @@ export const useGoogleLogin = () => {
     },
     onSuccess() {
       toast.success("login successful");
-      queryClient.invalidateQueries({ queryKey: ["current", "workspaces"] });
+      queryClient.invalidateQueries({ queryKey: ["current"] });
       router.push("/");
     },
     onError(error) {

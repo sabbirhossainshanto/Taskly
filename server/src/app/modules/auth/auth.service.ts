@@ -8,6 +8,7 @@ import { IUser } from "../user/user.interface";
 import { verifyToken } from "../../utils/verifyToken";
 import { verifyGoogleToken } from "../../utils/verifyGoogleToken";
 import { TokenPayload } from "google-auth-library";
+import { fileUploader } from "../../utils/fileUploader";
 
 const resisterMember = async (payload: IUser) => {
   const isAlreadyExist = await User.findOne({
@@ -107,7 +108,6 @@ const loginWithGoogle = async (payload: { token: string }) => {
       email: newUser.email,
       _id: newUser?._id,
       role: newUser?.role,
-      image: newUser?.image,
     };
 
     const accessToken = generateToken(
@@ -128,7 +128,6 @@ const loginWithGoogle = async (payload: { token: string }) => {
     email: user.email,
     _id: user?._id,
     role: user?.role,
-    image: user?.image,
   };
 
   const accessToken = generateToken(

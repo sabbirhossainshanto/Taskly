@@ -17,5 +17,7 @@ const memberSchema = new mongoose_1.Schema({
         required: true,
         ref: "Workspace",
     },
+}, {
+    timestamps: true,
 });
 exports.Member = (0, mongoose_1.model)("Member", memberSchema);

@@ -19,5 +19,10 @@ const memberSchema = new mongoose_1.Schema({
         type: String,
         default: "user",
     },
+    image: {
+        type: String,
+    },
+}, {
+    timestamps: true,
 });
 exports.User = (0, mongoose_1.model)("User", memberSchema);

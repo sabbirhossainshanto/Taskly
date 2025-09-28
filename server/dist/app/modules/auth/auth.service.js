@@ -10,6 +10,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const config_1 = __importDefault(require("../../config"));
 const generateToken_1 = require("../../utils/generateToken");
 const user_model_1 = require("../user/user.model");
+const verifyGoogleToken_1 = require("../../utils/verifyGoogleToken");
 const resisterMember = async (payload) => {
     const isAlreadyExist = await user_model_1.User.findOne({
         email: payload.email,
@@ -51,7 +52,44 @@ const loginMember = async (payload) => {
     const refreshToken = (0, generateToken_1.generateToken)(tokenObj, config_1.default.jwt_refresh_secret, config_1.default.jwt_refresh_expires_in);
     return { accessToken, refreshToken };
 };
+const loginWithGoogle = async (payload) => {
+    if (!payload.token) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "You are not authorized");
+    }
+    const { email, name, picture } = (await (0, verifyGoogleToken_1.verifyGoogleToken)(payload.token));
+    const user = await user_model_1.User.findOne({
+        email,
+        name,
+    });
+    if (!user) {
+        const newUser = await user_model_1.User.create({
+            email,
+            name,
+            role: "member",
+            image: picture,
+        });
+        const tokenObj = {
+            name: newUser.name,
+            email: newUser.email,
+            _id: newUser?._id,
+            role: newUser?.role,
+        };
+        const accessToken = (0, generateToken_1.generateToken)(tokenObj, config_1.default.jwt_access_secret, config_1.default.jwt_access_expires_in);
+        const refreshToken = (0, generateToken_1.generateToken)(tokenObj, config_1.default.jwt_refresh_secret, config_1.default.jwt_refresh_expires_in);
+        return { accessToken, refreshToken };
+    }
+    const tokenObj = {
+        name: user.name,
+        email: user.email,
+        _id: user?._id,
+        role: user?.role,
+    };
+    const accessToken = (0, generateToken_1.generateToken)(tokenObj, config_1.default.jwt_access_secret, config_1.default.jwt_access_expires_in);
+    const refreshToken = (0, generateToken_1.generateToken)(tokenObj, config_1.default.jwt_refresh_secret, config_1.default.jwt_refresh_expires_in);
+    return { accessToken, refreshToken };
+};
 exports.authService = {
     resisterMember,
     loginMember,
+    loginWithGoogle,
 };

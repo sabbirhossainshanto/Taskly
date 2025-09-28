@@ -12,8 +12,8 @@ const member_model_1 = require("../member/member.model");
 const user_constant_1 = require("../user/user.constant");
 const workspace_model_1 = require("./workspace.model");
 const http_status_1 = __importDefault(require("http-status"));
-const task_interface_1 = require("../taks/task.interface");
-const task_model_1 = require("../taks/task.model");
+const task_interface_1 = require("../task/task.interface");
+const task_model_1 = require("../task/task.model");
 const createWorkspace = async (payload, file, user) => {
     if (file) {
         const { secure_url } = await fileUploader_1.fileUploader.uploadToCloudinary(file);

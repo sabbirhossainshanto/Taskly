@@ -10,8 +10,8 @@ const member_model_1 = require("../member/member.model");
 const http_status_1 = __importDefault(require("http-status"));
 const project_model_1 = require("./project.model");
 const date_fns_1 = require("date-fns");
-const task_model_1 = require("../taks/task.model");
-const task_interface_1 = require("../taks/task.interface");
+const task_model_1 = require("../task/task.model");
+const task_interface_1 = require("../task/task.interface");
 const createProject = async (payload, file, user) => {
     const member = await member_model_1.Member.findOne({
         workspaceId: payload.workspaceId,
@@ -220,7 +220,11 @@ const deleteProject = async (projectId, user) => {
     const deletedProject = await project_model_1.Project.deleteOne({
         _id: projectId,
     });
-    return deletedProject;
+    return {
+        ...deletedProject,
+        project: existingProject?._id,
+        workspace: existingProject?.workspaceId,
+    };
 };
 exports.projectService = {
     createProject,

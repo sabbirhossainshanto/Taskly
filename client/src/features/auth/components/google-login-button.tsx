@@ -19,8 +19,7 @@ export default function GoogleLoginButton() {
           size: "large",
           type: "standard",
           shape: "rectangular",
-          text: "continue_with", // this shows “Continue as …”
-          //   is_fedcm_supported: false,
+          text: "continue_with",
         }
       );
 

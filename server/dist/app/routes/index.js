@@ -6,7 +6,7 @@ const member_route_1 = require("../modules/member/member.route");
 const workspace_route_1 = require("../modules/workspace/workspace.route");
 const project_route_1 = require("../modules/project/project.route");
 const user_route_1 = require("../modules/user/user.route");
-const task_route_1 = require("../modules/taks/task.route");
+const task_route_1 = require("../modules/task/task.route");
 const router = (0, express_1.Router)();
 const moduleRoutes = [
     {
