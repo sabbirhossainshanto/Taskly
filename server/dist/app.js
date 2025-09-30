@@ -12,16 +12,14 @@ const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
 const app = (0, express_1.default)();
 //parser
 app.use(express_1.default.json());
+app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
     origin: [
-        "http://localhost:3000",
         "https://taskly-tasks-management.vercel.app",
+        "http://localhost:3000",
     ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
 }));
-app.use((0, cookie_parser_1.default)());
 /* Applications routes */
 app.use("/api/v1", routes_1.default);
 app.get("/", (req, res) => {

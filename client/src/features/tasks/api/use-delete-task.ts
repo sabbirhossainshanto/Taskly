@@ -9,11 +9,12 @@ export const useDeleteTask = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation<IResponse<ITask>, Error, { taskId: string }>({
     mutationFn: async ({ taskId }) => {
-      const { data } = await AxiosSecure.delete(`/tasks/${taskId}`);
+      const { data } = await AxiosSecure.delete<IResponse<ITask>>(
+        `/tasks/${taskId}`
+      );
       return data;
     },
     onSuccess(data) {
-      console.log(data);
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({

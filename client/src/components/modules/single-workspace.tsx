@@ -21,8 +21,19 @@ import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { formatDistanceToNow } from "date-fns";
 import { CalendarIcon, PlusIcon, SettingsIcon } from "lucide-react";
 import Link from "next/link";
+interface TaskListProps {
+  data: ITask[];
+}
 
-export const WorkspaceIdClient = () => {
+interface ProjectListProps {
+  data: IProject[];
+}
+
+interface MemberListProps {
+  data: IMember[];
+}
+
+export const SingleWorkspacePage = () => {
   const workspaceId = useWorkspaceId();
   const { data: analytics, isLoading: isLoadingAnalytics } =
     useGetWorkspaceAnalytics({ workspaceId });
@@ -60,10 +71,6 @@ export const WorkspaceIdClient = () => {
     </div>
   );
 };
-
-interface TaskListProps {
-  data: ITask[];
-}
 
 const TaskList = ({ data }: TaskListProps) => {
   const workspaceId = useWorkspaceId();
@@ -112,10 +119,6 @@ const TaskList = ({ data }: TaskListProps) => {
   );
 };
 
-interface ProjectListProps {
-  data: IProject[];
-}
-
 const ProjectList = ({ data }: ProjectListProps) => {
   const workspaceId = useWorkspaceId();
   const { open: createProject } = useCreateProjectModal();
@@ -157,10 +160,6 @@ const ProjectList = ({ data }: ProjectListProps) => {
     </div>
   );
 };
-
-interface MemberListProps {
-  data: IMember[];
-}
 
 const MemberList = ({ data }: MemberListProps) => {
   const workspaceId = useWorkspaceId();

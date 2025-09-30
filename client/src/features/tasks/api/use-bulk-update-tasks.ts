@@ -1,10 +1,10 @@
-import { AxiosSecure } from "@/lib/AxiosSecure";
 import { IResponse } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
 import { ITask, TaskStatus } from "../types";
 import { AxiosError } from "axios";
+import { AxiosSecure } from "@/lib/AxiosSecure";
 
 interface IBulkUpdateTasks {
   _id: string;
@@ -20,7 +20,12 @@ export const useBulkUpdateTasks = () => {
     { tasks: IBulkUpdateTasks[] }
   >({
     mutationFn: async ({ tasks }) => {
-      const { data } = await AxiosSecure.post("/tasks/bulk-update", { tasks });
+      const { data } = await AxiosSecure.post<IResponse<ITask[]>>(
+        "/tasks/bulk-update",
+        {
+          tasks,
+        }
+      );
       return data;
     },
     onSuccess(data) {

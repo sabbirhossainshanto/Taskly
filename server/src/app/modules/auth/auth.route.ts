@@ -15,11 +15,6 @@ router.post(
   validateRequest(authValidation.loginValidation),
   authController.loginMember
 );
-router.post(
-  "/login-with-google",
-  // validateRequest(authValidation.loginValidation),
-  authController.loginWithGoogle
-);
-router.post("/logout", authController.logOut);
+router.post("/login-with-google", authController.loginWithGoogle);
 
 export const AuthRoutes = router;

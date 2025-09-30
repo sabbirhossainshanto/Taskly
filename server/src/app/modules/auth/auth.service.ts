@@ -5,10 +5,8 @@ import config from "../../config";
 import { generateToken } from "../../utils/generateToken";
 import { User } from "../user/user.model";
 import { IUser } from "../user/user.interface";
-import { verifyToken } from "../../utils/verifyToken";
 import { verifyGoogleToken } from "../../utils/verifyGoogleToken";
 import { TokenPayload } from "google-auth-library";
-import { fileUploader } from "../../utils/fileUploader";
 
 const resisterMember = async (payload: IUser) => {
   const isAlreadyExist = await User.findOne({

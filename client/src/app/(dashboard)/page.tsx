@@ -8,7 +8,10 @@ export default async function Home() {
   if (!user) redirect("/sign-in");
 
   const data = await getWorkspaces();
-  if (!data?.data || data?.data?.length === 0) redirect("/workspaces/create");
-
-  redirect(`/workspaces/${data?.data?.[0]._id}`);
+  console.log({ data });
+  if (!data?.data || data?.data?.length === 0) {
+    redirect("/workspaces/create");
+  } else {
+    redirect(`/workspaces/${data?.data?.[0]?._id}`);
+  }
 }

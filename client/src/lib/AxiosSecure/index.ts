@@ -1,14 +1,17 @@
 import { BASE_URL } from "@/config";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export const AxiosSecure = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true,
 });
 
-// Add a request interceptor
 AxiosSecure.interceptors.request.use(
   async (config) => {
+    const accessToken = Cookies.get("accessToken");
+    if (accessToken) {
+      config.headers.Authorization = accessToken;
+    }
     return config;
   },
   async function (error) {

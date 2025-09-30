@@ -1,9 +1,10 @@
 "use server";
 
-import { AxiosSecure } from "@/lib/AxiosSecure";
 import { IResponse } from "@/types";
 import { IWorkspace } from "../type";
 import { cookies } from "next/headers";
+
+import { AxiosSecure } from "@/lib/AxiosSecure";
 
 export const getWorkspaces = async (): Promise<IResponse<IWorkspace[]>> => {
   try {

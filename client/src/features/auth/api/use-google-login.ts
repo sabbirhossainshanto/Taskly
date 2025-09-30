@@ -3,6 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+// import { loginWithGoogle } from "../server/auth";
+import Cookies from "js-cookie";
 import { AxiosSecure } from "@/lib/AxiosSecure";
 
 export const useGoogleLogin = () => {
@@ -17,10 +19,12 @@ export const useGoogleLogin = () => {
       const { data } = await AxiosSecure.post("/auth/login-with-google", {
         token,
       });
+      Cookies.set("accessToken", data.data.accessToken, { secure: true });
+      Cookies.set("refreshToken", data.data.refreshToken, { secure: true });
       return data;
     },
-    onSuccess() {
-      toast.success("login successful");
+    onSuccess(data) {
+      toast.success(data?.message);
       queryClient.invalidateQueries({ queryKey: ["current"] });
       router.push("/");
     },

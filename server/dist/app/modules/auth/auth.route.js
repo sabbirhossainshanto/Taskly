@@ -11,8 +11,5 @@ const auth_controller_1 = require("./auth.controller");
 const router = (0, express_1.Router)();
 router.post("/register", (0, validateRequest_1.default)(auth_validation_1.authValidation.registerValidation), auth_controller_1.authController.registerMember);
 router.post("/login", (0, validateRequest_1.default)(auth_validation_1.authValidation.loginValidation), auth_controller_1.authController.loginMember);
-router.post("/login-with-google", 
-// validateRequest(authValidation.loginValidation),
-auth_controller_1.authController.loginWithGoogle);
-router.post("/logout", auth_controller_1.authController.logOut);
+router.post("/login-with-google", auth_controller_1.authController.loginWithGoogle);
 exports.AuthRoutes = router;

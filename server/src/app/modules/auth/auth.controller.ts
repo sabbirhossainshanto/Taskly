@@ -7,100 +7,39 @@ const registerMember = catchAsync(async (req, res) => {
   const { accessToken, refreshToken } = await authService.resisterMember(
     req.body
   );
-  res.cookie("accessToken", accessToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
-    path: "/",
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-  res.cookie("refreshToken", refreshToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
-    path: "/",
-    maxAge: 24 * 60 * 60 * 1000,
-  });
+
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Registered successful",
-    data: null,
+    data: { accessToken, refreshToken },
   });
 });
 const loginMember = catchAsync(async (req, res) => {
   const { accessToken, refreshToken } = await authService.loginMember(req.body);
-  res.cookie("accessToken", accessToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
-    path: "/",
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-  res.cookie("refreshToken", refreshToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
-    path: "/",
-    maxAge: 24 * 60 * 60 * 1000,
-  });
+
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Login successful",
-    data: null,
+    data: { accessToken, refreshToken },
   });
 });
 const loginWithGoogle = catchAsync(async (req, res) => {
   const { accessToken, refreshToken } = await authService.loginWithGoogle(
     req.body
   );
-  res.cookie("accessToken", accessToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
-    path: "/",
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-  res.cookie("refreshToken", refreshToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
-    path: "/",
-    maxAge: 24 * 60 * 60 * 1000,
-  });
+
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Login successful",
-    data: null,
-  });
-});
-const logOut = catchAsync(async (req, res) => {
-  res.clearCookie("accessToken", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    path: "/",
-  });
-
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    path: "/",
-  });
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "Logged out successful",
-    data: null,
+    data: { accessToken, refreshToken },
   });
 });
 
 export const authController = {
   registerMember,
   loginMember,
-  logOut,
   loginWithGoogle,
 };

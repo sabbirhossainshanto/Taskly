@@ -1,7 +1,7 @@
-import { AxiosSecure } from "@/lib/AxiosSecure";
 import { IResponse } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { IUser } from "../type";
+import { AxiosSecure } from "@/lib/AxiosSecure";
 
 export const useCurrent = () => {
   const query = useQuery<unknown, Error, IResponse<IUser>>({

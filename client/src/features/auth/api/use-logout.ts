@@ -1,13 +1,13 @@
-import { AxiosSecure } from "@/lib/AxiosSecure";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { logOut } from "../server/auth";
 
 export const useLogout = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: async () => await AxiosSecure.post("/auth/logout"),
+    mutationFn: async () => await logOut(),
     onSuccess() {
       toast.success("Logged out");
       queryClient.invalidateQueries();

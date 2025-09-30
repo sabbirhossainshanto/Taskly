@@ -1,10 +1,10 @@
-import { AxiosSecure } from "@/lib/AxiosSecure";
 import { IResponse } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
 import { ICreateTask, ITask } from "../types";
 import { AxiosError } from "axios";
+import { AxiosSecure } from "@/lib/AxiosSecure";
 
 export const useUpdateTask = () => {
   const queryClient = useQueryClient();
