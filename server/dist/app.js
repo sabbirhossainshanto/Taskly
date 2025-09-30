@@ -17,6 +17,7 @@ app.use((0, cors_1.default)({
     origin: [
         "https://taskly-tasks-management.vercel.app",
         "http://localhost:3000",
+        "https://workspace-taskly.netlify.app",
     ],
     credentials: true,
 }));

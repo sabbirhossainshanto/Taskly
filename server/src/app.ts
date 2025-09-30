@@ -16,6 +16,7 @@ app.use(
     origin: [
       "https://taskly-tasks-management.vercel.app",
       "http://localhost:3000",
+      "https://workspace-taskly.netlify.app",
     ],
     credentials: true,
   })

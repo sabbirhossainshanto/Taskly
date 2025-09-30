@@ -33,7 +33,7 @@ interface MemberListProps {
   data: IMember[];
 }
 
-export const SingleWorkspacePage = () => {
+export const WorkspaceIdClient = () => {
   const workspaceId = useWorkspaceId();
   const { data: analytics, isLoading: isLoadingAnalytics } =
     useGetWorkspaceAnalytics({ workspaceId });
