@@ -7,7 +7,7 @@ import { User } from "../modules/user/user.model";
 import { IUser } from "../modules/user/user.interface";
 
 const auth = catchAsync(async (req, res, next) => {
-  const token = req.headers.cookie || req.headers.authorization;
+  const token = req.headers.authorization;
 
   if (!token) {
     throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized");

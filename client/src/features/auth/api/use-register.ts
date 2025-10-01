@@ -5,10 +5,7 @@ import { toast } from "sonner";
 import z from "zod";
 import { registerSchema } from "../schemas";
 import { AxiosError } from "axios";
-// import { registerMember } from "../server/auth";
-// import { AxiosSecure } from "@/lib/AxiosSecure";
-// import Cookies from "js-cookie";
-import { registerMember } from "../server/auth";
+import Cookies from "js-cookie";
 import { AxiosSecure } from "@/lib/AxiosSecure";
 
 export const useRegister = () => {
@@ -22,8 +19,8 @@ export const useRegister = () => {
     mutationKey: ["register"],
     mutationFn: async (payload) => {
       const { data } = await AxiosSecure.post("/auth/register", payload);
-      // Cookies.set("accessToken", data.data.accessToken, { secure: true });
-      // Cookies.set("refreshToken", data.data.refreshToken, { secure: true });
+      Cookies.set("accessToken", data.data.accessToken, { secure: true });
+      Cookies.set("refreshToken", data.data.refreshToken, { secure: true });
       return data;
     },
     onSuccess() {

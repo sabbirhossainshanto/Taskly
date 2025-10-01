@@ -1,4 +1,3 @@
-import config from "../../config";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { authService } from "./auth.service";
@@ -7,17 +6,6 @@ const registerMember = catchAsync(async (req, res) => {
   const { accessToken, refreshToken } = await authService.resisterMember(
     req.body
   );
-
-  res.cookie("accessToken", accessToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
-  });
-  res.cookie("refreshToken", refreshToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
-  });
 
   sendResponse(res, {
     statusCode: 200,
@@ -28,17 +16,6 @@ const registerMember = catchAsync(async (req, res) => {
 });
 const loginMember = catchAsync(async (req, res) => {
   const { accessToken, refreshToken } = await authService.loginMember(req.body);
-
-  res.cookie("accessToken", accessToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
-  });
-  res.cookie("refreshToken", refreshToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
-  });
 
   sendResponse(res, {
     statusCode: 200,
@@ -51,16 +28,6 @@ const loginWithGoogle = catchAsync(async (req, res) => {
   const { accessToken, refreshToken } = await authService.loginWithGoogle(
     req.body
   );
-  res.cookie("accessToken", accessToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
-  });
-  res.cookie("refreshToken", refreshToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
-  });
 
   sendResponse(res, {
     statusCode: 200,

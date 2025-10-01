@@ -9,6 +9,16 @@ const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const auth_service_1 = require("./auth.service");
 const registerMember = (0, catchAsync_1.default)(async (req, res) => {
     const { accessToken, refreshToken } = await auth_service_1.authService.resisterMember(req.body);
+    res.cookie("accessToken", accessToken, {
+        secure: true,
+        httpOnly: true,
+        sameSite: "none",
+    });
+    res.cookie("refreshToken", refreshToken, {
+        secure: true,
+        httpOnly: true,
+        sameSite: "none",
+    });
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
@@ -18,6 +28,16 @@ const registerMember = (0, catchAsync_1.default)(async (req, res) => {
 });
 const loginMember = (0, catchAsync_1.default)(async (req, res) => {
     const { accessToken, refreshToken } = await auth_service_1.authService.loginMember(req.body);
+    res.cookie("accessToken", accessToken, {
+        secure: true,
+        httpOnly: true,
+        sameSite: "none",
+    });
+    res.cookie("refreshToken", refreshToken, {
+        secure: true,
+        httpOnly: true,
+        sameSite: "none",
+    });
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
@@ -27,6 +47,16 @@ const loginMember = (0, catchAsync_1.default)(async (req, res) => {
 });
 const loginWithGoogle = (0, catchAsync_1.default)(async (req, res) => {
     const { accessToken, refreshToken } = await auth_service_1.authService.loginWithGoogle(req.body);
+    res.cookie("accessToken", accessToken, {
+        secure: true,
+        httpOnly: true,
+        sameSite: "none",
+    });
+    res.cookie("refreshToken", refreshToken, {
+        secure: true,
+        httpOnly: true,
+        sameSite: "none",
+    });
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,

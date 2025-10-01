@@ -5,10 +5,7 @@ import { toast } from "sonner";
 import z from "zod";
 import { loginSchema } from "../schemas";
 import { AxiosError } from "axios";
-// import { loginMember } from "../server/auth";
-// import Cookies from "js-cookie";
-// import { AxiosSecure } from "@/lib/AxiosSecure";
-import { loginMember } from "../server/auth";
+import Cookies from "js-cookie";
 import { AxiosSecure } from "@/lib/AxiosSecure";
 
 export const useLogin = () => {
@@ -20,10 +17,10 @@ export const useLogin = () => {
     z.infer<typeof loginSchema>
   >({
     mutationFn: async (payload) => {
-      // const { data } = await AxiosSecure.post("/auth/login", payload);
       const { data } = await AxiosSecure.post("/auth/login", payload);
-      // Cookies.set("accessToken", data.data.accessToken, { secure: true });
-      // Cookies.set("refreshToken", data.data.refreshToken, { secure: true });
+
+      Cookies.set("accessToken", data.data.accessToken, { secure: true });
+      Cookies.set("refreshToken", data.data.refreshToken, { secure: true });
       return data;
     },
     onSuccess() {
