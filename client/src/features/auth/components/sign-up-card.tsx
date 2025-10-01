@@ -42,7 +42,7 @@ export const SignUpCard = () => {
           Seconds to sign up!
         </CardTitle>
       </CardHeader>
-      <CardContent className="px-[60px] flex flex-col gap-y-3">
+      <CardContent className="px-[50px] flex flex-col gap-y-3">
         <GoogleLoginButton />
         {/* <Button
           disabled={isPending}
@@ -54,8 +54,8 @@ export const SignUpCard = () => {
           Login with Github
         </Button> */}
       </CardContent>
-      <Divider className="px-[60px]" />
-      <CardContent className="px-[60px]">
+      <Divider className="px-[50px]" />
+      <CardContent className="px-[50px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -124,7 +124,7 @@ export const SignUpCard = () => {
         </Form>
       </CardContent>
 
-      <CardContent className="px-[60px] flex items-center justify-center">
+      <CardContent className="px-[50px] flex items-center justify-center">
         <p>
           Already have an account ?
           <Link href="/sign-in">
