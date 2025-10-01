@@ -20,6 +20,7 @@
         "@radix-ui/react-tabs": "^1.1.13",
         "@tanstack/react-query": "^5.85.6",
         "@tanstack/react-table": "^8.21.3",
+        "@types/google.accounts": "^0.0.18",
         "@types/react-big-calendar": "^1.16.3",
         "axios": "^1.11.0",
         "class-variance-authority": "^0.7.1",
@@ -384,6 +385,8 @@
     "@types/date-arithmetic": ["@types/date-arithmetic@4.1.4", "", {}, "sha512-p9eZ2X9B80iKiTW4ukVj8B4K6q9/+xFtQ5MGYA5HWToY9nL4EkhV9+6ftT2VHpVMEZb5Tv00Iel516bVdO+yRw=="],
 
     "@types/estree": ["@types/estree@1.0.8", "", {}, "sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w=="],
+
+    "@types/google.accounts": ["@types/google.accounts@0.0.18", "", {}, "sha512-yHaPznll97ZnMJlPABHyeiIlLn3u6gQaUjA5k/O9lrrpgFB9VT10CKPLuKM0qTHMl50uXpW5sIcG+utm8jMOHw=="],
 
     "@types/js-cookie": ["@types/js-cookie@2.2.7", "", {}, "sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA=="],
 

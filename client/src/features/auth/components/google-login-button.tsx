@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useGoogleLogin } from "../api/use-google-login";
 
 export default function GoogleLoginButton() {
+  const containerRef = useRef<HTMLDivElement>(null);
   const { mutate } = useGoogleLogin();
   useEffect(() => {
-    if (window.google) {
+    if (window.google && containerRef.current) {
+      const width = containerRef.current.offsetWidth;
       window.google.accounts.id.initialize({
         client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!, // from step 1
         callback: handleCredentialResponse,
@@ -20,6 +22,7 @@ export default function GoogleLoginButton() {
           type: "standard",
           shape: "rectangular",
           text: "continue_with",
+          width,
         }
       );
 
@@ -33,5 +36,5 @@ export default function GoogleLoginButton() {
     mutate({ token: response.credential });
   }
 
-  return <div id="googleSignInDiv"></div>;
+  return <div ref={containerRef} id="googleSignInDiv"></div>;
 }

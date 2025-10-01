@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { QueryProvider } from "@/components/query-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { NEXT_PUBLIC_GOOGLE_CLIENT_ID } from "@/config";
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -25,11 +26,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
-          src="https://accounts.google.com/gsi/client"
-          async
-          defer
-        ></script>
+        <script src="https://accounts.google.com/gsi/client" async></script>
+        <meta
+          name="google-signin-client_id"
+          content={`${NEXT_PUBLIC_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`}
+        ></meta>
       </head>
       <body className={cn(inter.className, "antialiased min-h-screen")}>
         <NuqsAdapter>
