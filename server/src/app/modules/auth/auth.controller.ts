@@ -8,6 +8,17 @@ const registerMember = catchAsync(async (req, res) => {
     req.body
   );
 
+  res.cookie("accessToken", accessToken, {
+    secure: true,
+    httpOnly: true,
+    sameSite: "none",
+  });
+  res.cookie("refreshToken", refreshToken, {
+    secure: true,
+    httpOnly: true,
+    sameSite: "none",
+  });
+
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -17,6 +28,17 @@ const registerMember = catchAsync(async (req, res) => {
 });
 const loginMember = catchAsync(async (req, res) => {
   const { accessToken, refreshToken } = await authService.loginMember(req.body);
+
+  res.cookie("accessToken", accessToken, {
+    secure: true,
+    httpOnly: true,
+    sameSite: "none",
+  });
+  res.cookie("refreshToken", refreshToken, {
+    secure: true,
+    httpOnly: true,
+    sameSite: "none",
+  });
 
   sendResponse(res, {
     statusCode: 200,
@@ -29,6 +51,16 @@ const loginWithGoogle = catchAsync(async (req, res) => {
   const { accessToken, refreshToken } = await authService.loginWithGoogle(
     req.body
   );
+  res.cookie("accessToken", accessToken, {
+    secure: true,
+    httpOnly: true,
+    sameSite: "none",
+  });
+  res.cookie("refreshToken", refreshToken, {
+    secure: true,
+    httpOnly: true,
+    sameSite: "none",
+  });
 
   sendResponse(res, {
     statusCode: 200,

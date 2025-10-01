@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 // import { loginWithGoogle } from "../server/auth";
 import Cookies from "js-cookie";
+// import { AxiosSecure } from "@/lib/AxiosSecure";
+import { loginWithGoogle } from "../server/auth";
 import { AxiosSecure } from "@/lib/AxiosSecure";
 
 export const useGoogleLogin = () => {
@@ -19,6 +21,7 @@ export const useGoogleLogin = () => {
       const { data } = await AxiosSecure.post("/auth/login-with-google", {
         token,
       });
+      // const { data } = await loginWithGoogle({ token });
       Cookies.set("accessToken", data.data.accessToken, { secure: true });
       Cookies.set("refreshToken", data.data.refreshToken, { secure: true });
       return data;
