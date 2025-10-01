@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { FaGithub } from "react-icons/fa";
+// import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -42,9 +42,9 @@ export const SignUpCard = () => {
           Seconds to sign up!
         </CardTitle>
       </CardHeader>
-      <CardContent className="px-7 flex flex-col gap-y-3">
+      <CardContent className="px-[60px] flex flex-col gap-y-3">
         <GoogleLoginButton />
-        <Button
+        {/* <Button
           disabled={isPending}
           variant="secondary"
           size="lg"
@@ -52,10 +52,10 @@ export const SignUpCard = () => {
         >
           <FaGithub className="mr-2 size-5" />
           Login with Github
-        </Button>
+        </Button> */}
       </CardContent>
-      <Divider className="px-7" />
-      <CardContent className="px-7">
+      <Divider className="px-[60px]" />
+      <CardContent className="px-[60px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -124,7 +124,7 @@ export const SignUpCard = () => {
         </Form>
       </CardContent>
 
-      <CardContent className="px-7 flex items-center justify-center">
+      <CardContent className="px-[60px] flex items-center justify-center">
         <p>
           Already have an account ?
           <Link href="/sign-in">
