@@ -10,7 +10,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../config"));
 const user_model_1 = require("../modules/user/user.model");
 const auth = (0, catchAsync_1.default)(async (req, res, next) => {
-    const token = req.headers.cookie || req.headers.authorization;
+    const token = req.headers.authorization;
     if (!token) {
         throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, "You are not authorized");
     }
