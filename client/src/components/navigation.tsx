@@ -5,37 +5,28 @@ import { cn } from "@/lib/utils";
 import { SettingsIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  GoCheckCircle,
-  GoCheckCircleFill,
-  GoHome,
-  GoHomeFill,
-} from "react-icons/go";
+import { GoCheckCircle, GoHome } from "react-icons/go";
 
 const routes = [
   {
     label: "Home",
     href: "",
     icon: GoHome,
-    activeIcon: GoHomeFill,
   },
   {
     label: "My Tasks",
     href: "/tasks",
     icon: GoCheckCircle,
-    activeIcon: GoCheckCircleFill,
   },
   {
     label: "Settings",
     href: "/settings",
     icon: SettingsIcon,
-    activeIcon: SettingsIcon,
   },
   {
     label: "Members",
     href: "/members",
     icon: UserIcon,
-    activeIcon: UserIcon,
   },
 ];
 
@@ -48,16 +39,20 @@ export const Navigation = () => {
         const fullHref = `/workspaces/${workspaceId}${item.href}`;
         const isActive = pathname === fullHref;
 
-        const Icon = isActive ? item.activeIcon : item.icon;
         return (
           <Link key={item.href} href={fullHref}>
             <div
               className={cn(
-                "flex items-center gap-2.5 p-2.5 rounded-md font-medium hover:text-primary transition text-neutral-500",
-                isActive && "bg-white shadow-sm hover:opacity-100 text-primary"
+                "flex items-center gap-2.5 px-2 py-1 rounded-md font-medium  transition text-primary text-sm my-0.5",
+                isActive && "bg-secondary-300 shadow-sm  text-secondary-1000"
               )}
             >
-              <Icon className="size-5 text-neutral-500" />
+              <item.icon
+                className={cn(
+                  "size-5",
+                  isActive ? "text-secondary-1000" : "text-primary"
+                )}
+              />
               {item.label}
             </div>
           </Link>

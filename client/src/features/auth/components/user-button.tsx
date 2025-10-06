@@ -2,24 +2,35 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useCurrent } from "../api/use-current";
-import { Loader, LogOut } from "lucide-react";
+import {
+  CircleUserRoundIcon,
+  CommandIcon,
+  GiftIcon,
+  Loader,
+  LogOut,
+  SunMoonIcon,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DottedSeparator } from "@/components/dotted-separator";
+
 import { useLogout } from "../api/use-logout";
+import { RiEmojiStickerLine } from "react-icons/ri";
+import { Separator } from "@/components/ui/separator";
+import { useThemeModal } from "@/features/members/hooks/use-theme-modal";
 
 export const UserButton = () => {
+  const { open: openThemeModal } = useThemeModal();
   const { data: user, isLoading } = useCurrent();
 
   const { mutate: logout } = useLogout();
 
   if (isLoading) {
     return (
-      <div className="size-10 rounded-full flex items-center justify-center bg-neutral-200 border border-neutral-300">
+      <div className="size-8 rounded-full flex items-center justify-center bg-neutral-200 border border-neutral-300">
         <Loader className="size-4 animate-spin text-muted-foreground" />
       </div>
     );
@@ -37,7 +48,7 @@ export const UserButton = () => {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger className="outline-none relative">
-        <Avatar className="size-10 hover:opacity-75 transition border border-neutral-300">
+        <Avatar className="size-8 hover:opacity-75 transition border border-neutral-300">
           <AvatarImage src={image} alt="image" />
           <AvatarFallback className="bg-neutral-200 font-medium text-neutral-500 flex items-center justify-center">
             {avatarFallback}
@@ -47,29 +58,58 @@ export const UserButton = () => {
       <DropdownMenuContent
         align="end"
         side="bottom"
-        className="w-60"
+        className="w-96 px-2.5 space-y-2 py-4"
         sideOffset={10}
       >
-        <div className="flex flex-col items-center justify-center gap-2 px-2.5 py-4">
-          <Avatar className="size-10 hover:opacity-75 transition border border-neutral-300">
+        <div className="flex gap-4 py-2">
+          <Avatar className="size-8 hover:opacity-75 transition border border-neutral-300">
             <AvatarImage src={image} alt="image" />
-            <AvatarFallback className="bg-neutral-200 font-medium text-neutral-500 flex items-center justify-center">
+            <AvatarFallback className="bg-neutral-200 font-medium text-neutral-500">
               {avatarFallback}
             </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col ">
             <p className="text-sm font-medium text-neutral-900">
               {name || "User"}
             </p>
-            <p className="text-xs text-neutral-500">{email}</p>
+            <p className="text-xs text-neutral-500">Online</p>
           </div>
         </div>
-        <DottedSeparator className="mb-1" />
+        <DropdownMenuItem className=" flex cursor-pointer border font-light text-sm">
+          <RiEmojiStickerLine />
+          <span> Set Status</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem className="flex cursor-pointer font-light text-sm  items-center py-2">
+          <CircleUserRoundIcon />
+          <span>Profile</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          onClick={openThemeModal}
+          className="flex cursor-pointer font-light text-sm  items-center py-2"
+        >
+          <SunMoonIcon />
+          <span>Themes</span>
+        </DropdownMenuItem>
+        <Separator className="my-1 " />
+        <DropdownMenuItem className="flex cursor-pointer font-light text-sm  items-center py-2">
+          <CommandIcon />
+          <span>Keyboard Shortcuts</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem className="flex cursor-pointer font-light text-sm  items-center py-2">
+          <GiftIcon />
+          <span>Referrals</span>
+        </DropdownMenuItem>
+
+        <Separator className="my-1 " />
+
         <DropdownMenuItem
           onClick={() => logout()}
-          className="h-10 flex items-center justify-center text-amber-700 font-medium cursor-pointer"
+          className="flex cursor-pointer font-light text-xs  items-center py-2 "
         >
-          <LogOut className="size-4 mr-2" />
+          <LogOut className="size-4" />
           Logout
         </DropdownMenuItem>
       </DropdownMenuContent>

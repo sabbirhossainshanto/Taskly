@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -37,21 +35,32 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  /* New Variables */
+  --color-secondary-50: rgb(var(--color-secondary-50));
+  --color-secondary-100: rgb(var(--color-secondary-100));
+  --color-secondary-200: rgb(var(--color-secondary-200));
+  --color-secondary-300: rgb(var(--color-secondary-300));
+  --color-secondary-400: rgb(var(--color-secondary-400));
+  --color-secondary-500: rgb(var(--color-secondary-500));
+  --color-secondary-600: rgb(var(--color-secondary-600));
+  --color-secondary-700: rgb(var(--color-secondary-700));
+  --color-secondary-800: rgb(var(--color-secondary-800));
+  --color-secondary-900: rgb(var(--color-secondary-900));
+  --color-secondary-1000: rgb(var(--color-secondary-1000));
+  --color-secondary-1100: rgb(var(--color-secondary-1100));
+  --color-sidebar: var(--sidebar-background);
+  --color-separator: var(--separator);
+  --color-navbar: var(--color-navbar);
+  --color-body: var(--color-body);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: #fcfcfc;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -76,21 +85,25 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  /* New Variables */
+  --primary: oklch(0.205 0 0);
+  --sidebar-background: #fcfcfc;
+  --separator: #eeeeee;
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
+[data-appearance="dark"] {
+  --background: rgb(30, 31, 36);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
+
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
+  --muted-foreground: oklch(78.261% 0.00009 271.152);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
@@ -110,6 +123,146 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  /* New Variables */
+  --primary: oklch(0.922 0 0);
+  --sidebar-background: rgb(25, 25, 25);
+  --separator: #343434;
+  --color-navbar: rgb(255, 255, 255, 0.0706);
+  --color-body: rgb(9, 9, 9);
+}
+
+[data-theme="purple"] {
+  --color-secondary-1100: 43, 33, 106;
+  --color-secondary-1000: 90, 67, 214;
+  --color-secondary-900: 85, 62, 208;
+  --color-secondary-800: 96, 73, 231;
+  --color-secondary-700: 155, 152, 253;
+  --color-secondary-600: 182, 182, 255;
+  --color-secondary-500: 202, 203, 255;
+  --color-secondary-400: 217, 218, 255;
+  --color-secondary-300: 229, 230, 255;
+  --color-secondary-200: 240, 241, 255;
+  --color-secondary-100: 248, 248, 255;
+  --color-secondary-50: 253, 253, 255;
+}
+
+[data-theme="blue"] {
+  --color-secondary-1100: 31, 45, 92;
+  --color-secondary-1000: 52, 81, 178;
+  --color-secondary-900: 58, 92, 204;
+  --color-secondary-800: 62, 99, 221;
+  --color-secondary-700: 141, 164, 239;
+  --color-secondary-600: 174, 192, 245;
+  --color-secondary-500: 198, 212, 249;
+  --color-secondary-400: 217, 226, 252;
+  --color-secondary-300: 230, 237, 254;
+  --color-secondary-200: 240, 244, 255;
+  --color-secondary-100: 248, 250, 255;
+  --color-secondary-50: 253, 253, 254;
+}
+
+[data-theme="pink"] {
+  --color-secondary-1100: 98, 22, 57;
+  --color-secondary-1000: 203, 29, 99;
+  --color-secondary-900: 220, 49, 117;
+  --color-secondary-800: 233, 61, 130;
+  --color-secondary-700: 229, 143, 177;
+  --color-secondary-600: 237, 173, 200;
+  --color-secondary-500: 244, 198, 219;
+  --color-secondary-400: 249, 216, 231;
+  --color-secondary-300: 252, 229, 240;
+  --color-secondary-200: 254, 239, 246;
+  --color-secondary-100: 255, 247, 251;
+  --color-secondary-50: 255, 252, 253;
+}
+[data-theme="violet"] {
+  --color-secondary-1100: 83, 25, 93;
+  --color-secondary-1000: 156, 43, 173;
+  --color-secondary-900: 164, 60, 180;
+  --color-secondary-800: 171, 74, 186;
+  --color-secondary-700: 207, 145, 216;
+  --color-secondary-600: 223, 175, 227;
+  --color-secondary-500: 235, 200, 237;
+  --color-secondary-400: 243, 217, 244;
+  --color-secondary-300: 249, 229, 249;
+  --color-secondary-200: 252, 239, 252;
+  --color-secondary-100: 255, 248, 255;
+  --color-secondary-50: 254, 252, 255;
+}
+
+[data-theme="indigo"] {
+  --color-secondary-1100: 31, 45, 92;
+  --color-secondary-1000: 52, 81, 178;
+  --color-secondary-900: 58, 92, 204;
+  --color-secondary-800: 62, 99, 221;
+  --color-secondary-700: 141, 164, 239;
+  --color-secondary-600: 174, 192, 245;
+  --color-secondary-500: 198, 212, 249;
+  --color-secondary-400: 217, 226, 252;
+  --color-secondary-300: 230, 237, 254;
+  --color-secondary-200: 240, 244, 255;
+  --color-secondary-100: 248, 250, 255;
+  --color-secondary-50: 253, 253, 254;
+}
+
+[data-theme="orange"] {
+  --color-secondary-1100: 88, 45, 29;
+  --color-secondary-1000: 153, 84, 58;
+  --color-secondary-900: 237, 95, 0;
+  --color-secondary-800: 247, 104, 8;
+  --color-secondary-700: 237, 138, 92;
+  --color-secondary-600: 255, 170, 125;
+  --color-secondary-500: 255, 194, 145;
+  --color-secondary-400: 255, 211, 164;
+  --color-secondary-300: 255, 224, 187;
+  --color-secondary-200: 255, 237, 213;
+  --color-secondary-100: 254, 248, 244;
+  --color-secondary-50: 254, 252, 251;
+}
+
+[data-theme="teal"] {
+  --color-secondary-1100: 13, 61, 56;
+  --color-secondary-1000: 6, 122, 111;
+  --color-secondary-900: 14, 152, 136;
+  --color-secondary-800: 18, 165, 148;
+  --color-secondary-700: 83, 185, 171;
+  --color-secondary-600: 141, 206, 195;
+  --color-secondary-500: 175, 223, 215;
+  --color-secondary-400: 199, 235, 229;
+  --color-secondary-300: 217, 243, 238;
+  --color-secondary-200: 231, 249, 245;
+  --color-secondary-100: 241, 252, 250;
+  --color-secondary-50: 250, 254, 253;
+}
+[data-theme="mint"] {
+  --color-secondary-1100: 5, 69, 58;
+  --color-secondary-1000: 0, 123, 101;
+  --color-secondary-900: 0, 180, 153;
+  --color-secondary-800: 22, 192, 164;
+  --color-secondary-700: 20, 191, 164;
+  --color-secondary-600: 106, 211, 188;
+  --color-secondary-500: 142, 227, 206;
+  --color-secondary-400: 168, 239, 221;
+  --color-secondary-300: 193, 246, 232;
+  --color-secondary-200: 217, 250, 241;
+  --color-secondary-100: 241, 252, 249;
+  --color-secondary-50: 248, 254, 252;
+}
+
+[data-theme="black"] {
+  --color-secondary-1100: 32, 32, 32;
+  --color-secondary-1000: 100, 100, 100;
+  --color-secondary-900: 131, 131, 131;
+  --color-secondary-800: 141, 141, 141;
+  --color-secondary-700: 187, 187, 187;
+  --color-secondary-600: 206, 206, 206;
+  --color-secondary-500: 217, 217, 217;
+  --color-secondary-400: 224, 224, 224;
+  --color-secondary-300: 232, 232, 232;
+  --color-secondary-200: 240, 240, 240;
+  --color-secondary-100: 249, 249, 249;
+  --color-secondary-50: 252, 252, 252;
+  --color-secondary-25: 252, 252, 252;
 }
 
 @layer base {
@@ -129,3 +282,16 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* 
+purple rgb(43, 33, 106)
+blue rgb(17, 50, 100)
+pink rgb(98, 22, 57)
+violet rgb(83, 25, 93)
+indigo rgb(31, 45, 92)
+orange rgb(88, 45, 29)
+teal rgb(13, 61, 56)
+bronze rgb(67, 48, 43)
+black rgb(30, 31, 36)
+mint rgb(5, 69, 58)
+*/

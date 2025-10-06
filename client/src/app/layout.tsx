@@ -7,6 +7,7 @@ import { QueryProvider } from "@/components/query-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { NEXT_PUBLIC_GOOGLE_CLIENT_ID } from "@/config";
+import { ThemeProvider } from "@/context/theme-context";
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -32,13 +33,15 @@ export default function RootLayout({
           content={`${NEXT_PUBLIC_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`}
         ></meta>
       </head>
-      <body className={cn(inter.className, "antialiased min-h-screen")}>
-        <NuqsAdapter>
-          <QueryProvider>
-            <Toaster />
-            {children}
-          </QueryProvider>
-        </NuqsAdapter>
+      <body className={cn(inter.className, "antialiased min-h-screen bg-body")}>
+        <ThemeProvider>
+          <NuqsAdapter>
+            <QueryProvider>
+              <Toaster />
+              {children}
+            </QueryProvider>
+          </NuqsAdapter>
+        </ThemeProvider>
       </body>
     </html>
   );
