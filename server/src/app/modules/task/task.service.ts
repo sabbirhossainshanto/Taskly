@@ -7,8 +7,8 @@ import { Task } from "./task.model";
 
 const createTask = async (payload: ITask, user: IUser) => {
   const member = await Member.findOne({
-    workspaceId: payload.workspace,
-    userId: user._id,
+    workspace: payload.workspace,
+    user: user._id,
   });
 
   if (!member) {
@@ -44,8 +44,8 @@ const getAllTasks = async (
   user: IUser
 ) => {
   const member = await Member.findOne({
-    workspaceId: query.workspace,
-    userId: user._id,
+    workspace: query.workspace,
+    user: user._id,
   });
 
   if (!member) {
@@ -86,7 +86,7 @@ const getAllTasks = async (
     .populate({
       path: "assignee",
       populate: {
-        path: "userId",
+        path: "user",
       },
     });
 
@@ -101,8 +101,8 @@ const getSingleTask = async (taskId: string, user: IUser) => {
   }
 
   const member = await Member.findOne({
-    workspaceId: task.workspace,
-    userId: user._id,
+    workspace: task.workspace,
+    user: user._id,
   });
 
   if (!member) {
@@ -118,7 +118,7 @@ const getSingleTask = async (taskId: string, user: IUser) => {
     .populate({
       path: "assignee",
       populate: {
-        path: "userId",
+        path: "user",
       },
     });
 
@@ -132,8 +132,8 @@ const deleteTask = async (taskId: string, user: IUser) => {
   }
 
   const member = await Member.findOne({
-    userId: user._id,
-    workspaceId: task.workspace,
+    user: user._id,
+    workspace: task.workspace,
   });
 
   if (!member) {
@@ -160,8 +160,8 @@ const updateTask = async (payload: ITask, taskId: string, user: IUser) => {
   }
 
   const member = await Member.findOne({
-    workspaceId: existingTask?.workspace,
-    userId: user._id,
+    workspace: existingTask?.workspace,
+    user: user._id,
   });
 
   if (!member) {
@@ -199,8 +199,8 @@ const bulkUpdateTask = async (
   const workspaceId = workspaceIds.values().next().value;
 
   const member = await Member.findOne({
-    workspaceId,
-    userId: user._id,
+    workspace: workspaceId,
+    user: user._id,
   });
 
   if (!member) {

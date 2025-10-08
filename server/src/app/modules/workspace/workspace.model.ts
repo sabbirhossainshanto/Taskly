@@ -13,7 +13,7 @@ const workspaceSchema = new Schema<IWorkspace>(
     inviteCode: {
       type: String,
     },
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },

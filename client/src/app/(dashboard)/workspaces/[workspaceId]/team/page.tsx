@@ -6,7 +6,7 @@ const WorkspaceIdMembers = async () => {
   const user = await getCurrent();
   if (!user) redirect("/sign-in");
   return (
-    <div className="w-full lg:max-w-xl">
+    <div className="w-full">
       <MembersList />
     </div>
   );

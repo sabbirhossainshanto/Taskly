@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/sidebar";
+import { InviteModal } from "@/features/members/components/invite-modal";
 import { ThemeModal } from "@/features/members/components/theme-modal";
 import { CreateProjectModal } from "@/features/projects/components/create-project-modal";
 import { CreateTaskModal } from "@/features/tasks/components/create-task-modal";
@@ -18,9 +19,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <CreateTaskModal />
       <EditTaskModal />
       <ThemeModal />
+      <InviteModal />
       <div className="flex flex-col w-full h-full">
         <Navbar />
-        <div className="fixed left-0 top-12 hidden lg:block lg:w-[264px] h-full overflow-auto">
+        <div className="fixed left-0 top-11 hidden lg:block lg:w-[264px] h-full overflow-auto">
           <Sidebar />
         </div>
         <div className="lg:pl-[264px] w-full">

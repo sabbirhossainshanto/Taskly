@@ -15,8 +15,8 @@ const createProject = async (
   user: IUser
 ) => {
   const member = await Member.findOne({
-    workspaceId: payload.workspaceId,
-    userId: user._id,
+    workspace: payload.workspace,
+    user: user._id,
   });
 
   if (!member) {
@@ -38,8 +38,8 @@ const createProject = async (
 
 const getWorkspaceProjects = async (workspaceId: string, user: IUser) => {
   const member = await Member.findOne({
-    workspaceId,
-    userId: user._id,
+    workspace: workspaceId,
+    user: user._id,
   });
 
   if (!member) {
@@ -49,7 +49,7 @@ const getWorkspaceProjects = async (workspaceId: string, user: IUser) => {
     );
   }
   const workspaces = await Project.find({
-    workspaceId,
+    workspace: workspaceId,
   });
 
   return workspaces;
@@ -59,8 +59,8 @@ const getSingleProject = async (projectId: string, user: IUser) => {
   const project = await Project.findById(projectId);
 
   const member = await Member.findOne({
-    workspaceId: project?.workspaceId,
-    userId: user?._id,
+    workspace: project?.workspace,
+    user: user?._id,
   });
 
   if (!member) {
@@ -70,15 +70,15 @@ const getSingleProject = async (projectId: string, user: IUser) => {
     );
   }
 
-  return await Project.findById(projectId).populate("workspaceId");
+  return await Project.findById(projectId).populate("workspace");
 };
 
 const getProjectAnalytics = async (projectId: string, user: IUser) => {
   const project = await Project.findById(projectId);
 
   const member = await Member.findOne({
-    workspaceId: project?.workspaceId,
-    userId: user?._id,
+    workspace: project?.workspace,
+    user: user?._id,
   });
 
   if (!member) {
@@ -240,8 +240,8 @@ const updateProject = async (
   }
 
   const member = await Member.findOne({
-    userId: user._id,
-    workspaceId: existingProject?.workspaceId,
+    user: user._id,
+    workspace: existingProject?.workspace,
   });
 
   if (!member) {
@@ -270,8 +270,8 @@ const deleteProject = async (projectId: string, user: IUser) => {
   }
 
   const member = await Member.findOne({
-    userId: user._id,
-    workspaceId: existingProject?.workspaceId,
+    user: user._id,
+    workspace: existingProject?.workspace,
   });
 
   if (!member) {
@@ -287,7 +287,7 @@ const deleteProject = async (projectId: string, user: IUser) => {
   return {
     ...deletedProject,
     project: existingProject?._id,
-    workspace: existingProject?.workspaceId,
+    workspace: existingProject?.workspace,
   };
 };
 

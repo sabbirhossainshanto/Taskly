@@ -21,7 +21,7 @@ export const MemberAvatar = ({
     >
       <AvatarFallback
         className={cn(
-          "bg-neutral-200 font-medium text-neutral-500 flex items-center justify-center",
+          "bg-neutral-200 font-medium text-primary-300 flex items-center justify-center",
           fallbackClassName
         )}
       >

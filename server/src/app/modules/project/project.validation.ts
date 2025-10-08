@@ -9,7 +9,7 @@ export const createProjectSchema = z.object({
         z.string().transform((value) => (value === "" ? undefined : value)),
       ])
       .optional(),
-    workspaceId: z.string(),
+    workspace: z.string(),
   }),
 });
 export const updateProjectSchema = z.object({

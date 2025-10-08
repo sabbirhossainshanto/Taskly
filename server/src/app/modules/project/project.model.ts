@@ -11,7 +11,7 @@ const projectSchema = new Schema<IProject>(
       type: String,
     },
 
-    workspaceId: {
+    workspace: {
       type: Schema.Types.ObjectId,
       ref: "Workspace",
     },

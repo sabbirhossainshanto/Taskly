@@ -22,7 +22,7 @@ export const KanbanCard = ({ task }: KanbanCardProps) => {
       <DottedSeparator />
       <div className="flex items-center gap-x-1.5">
         <MemberAvatar
-          name={task.assignee.userId.name}
+          name={task.assignee.user.name}
           fallbackClassName="text-[10px]"
         />
 

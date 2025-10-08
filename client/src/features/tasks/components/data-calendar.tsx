@@ -71,7 +71,7 @@ export const DataCalendar = ({ data }: DataCalendarProps) => {
     end: new Date(task.dueDate),
     title: task.name,
     project: task.project,
-    assignee: task.assignee.userId,
+    assignee: task.assignee.user,
     status: task.status,
     _id: task._id,
   }));

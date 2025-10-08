@@ -3,7 +3,7 @@ import { IUserRole } from "../user/user.interface";
 
 export interface IMember {
   _id: Types.ObjectId;
-  userId: Types.ObjectId;
-  workspaceId: Types.ObjectId;
+  user: Types.ObjectId;
+  workspace: Types.ObjectId;
   role: IUserRole;
 }

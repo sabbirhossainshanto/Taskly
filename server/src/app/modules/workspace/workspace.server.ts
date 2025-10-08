@@ -22,12 +22,12 @@ const createWorkspace = async (
   }
   const inviteCode = generateInviteCode(10);
   payload.inviteCode = inviteCode;
-  payload.userId = user._id;
+  payload.user = user._id;
 
   const workspace = await Workspace.create(payload);
   await Member.create({
-    userId: user._id,
-    workspaceId: workspace._id,
+    user: user._id,
+    workspace: workspace._id,
     role: USER_ROLE.admin,
   });
   return workspace;
@@ -35,14 +35,14 @@ const createWorkspace = async (
 
 export const getUserWorkspaces = async (user: IUser) => {
   const workspaces = await Workspace.find({
-    userId: user._id,
-  });
+    user: user._id,
+  }).populate("user");
 
   return workspaces;
 };
 
 export const getSingleWorkspace = async (workspaceId: string) => {
-  const workspace = await Workspace.findById(workspaceId);
+  const workspace = await Workspace.findById(workspaceId).populate("user");
 
   if (!workspace) {
     throw new AppError(httpStatus.NOT_FOUND, "Workspace not found");
@@ -52,8 +52,8 @@ export const getSingleWorkspace = async (workspaceId: string) => {
 
 const getWorkspaceAnalytics = async (workspaceId: string, user: IUser) => {
   const member = await Member.findOne({
-    workspaceId,
-    userId: user?._id,
+    workspace: workspaceId,
+    user: user?._id,
   });
 
   if (!member) {
@@ -209,7 +209,7 @@ export const updateWorkspace = async (
   user: IUser
 ) => {
   const isUserAdmin = await Member.findOne({
-    userId: user._id,
+    user: user._id,
   });
 
   if (isUserAdmin?.role !== USER_ROLE.admin) {
@@ -218,7 +218,7 @@ export const updateWorkspace = async (
 
   const isWorkspaceExist = await Workspace.findOne({
     _id: workspaceId,
-    userId: user._id,
+    user: user._id,
   });
 
   if (!isWorkspaceExist) {
@@ -236,7 +236,7 @@ export const updateWorkspace = async (
 
 export const deleteWorkspace = async (workspaceId: string, user: IUser) => {
   const isUserAdmin = await Member.findOne({
-    userId: user._id,
+    user: user._id,
   });
 
   if (isUserAdmin?.role !== USER_ROLE.admin) {
@@ -245,7 +245,7 @@ export const deleteWorkspace = async (workspaceId: string, user: IUser) => {
 
   const isWorkspaceExist = await Workspace.findOne({
     _id: workspaceId,
-    userId: user._id,
+    user: user._id,
   });
 
   if (!isWorkspaceExist) {
@@ -254,14 +254,14 @@ export const deleteWorkspace = async (workspaceId: string, user: IUser) => {
 
   const deletedWorkspace = await Workspace.deleteOne({
     _id: workspaceId,
-    userId: user._id,
+    user: user._id,
   });
   return deletedWorkspace;
 };
 
 export const resetInviteCode = async (workspaceId: string, user: IUser) => {
   const isUserAdmin = await Member.findOne({
-    userId: user._id,
+    user: user._id,
   });
 
   if (isUserAdmin?.role !== USER_ROLE.admin) {
@@ -270,7 +270,7 @@ export const resetInviteCode = async (workspaceId: string, user: IUser) => {
 
   const isWorkspaceExist = await Workspace.findOne({
     _id: workspaceId,
-    userId: user._id,
+    user: user._id,
   });
 
   if (!isWorkspaceExist) {
@@ -295,8 +295,8 @@ export const joinWorkspace = async (
   }
 
   const member = await Member.findOne({
-    userId: user._id,
-    workspaceId: workspaceId,
+    user: user._id,
+    workspace: workspaceId,
   });
 
   if (member) {
@@ -309,8 +309,8 @@ export const joinWorkspace = async (
 
   const result = await Member.create({
     role: USER_ROLE.member,
-    userId: user._id,
-    workspaceId,
+    user: user._id,
+    workspace: workspaceId,
   });
   return result;
 };

@@ -1,14 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { ITask } from "../types";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, MoreVertical } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
-import { TaskDate } from "./task-date";
-import { Badge } from "@/components/ui/badge";
-import { snakeCaseToTitleCase } from "@/lib/utils";
-import { TaskActions } from "./task-actions";
+import { IMember } from "@/features/members/types";
+import { MemberActions } from "./member-actions";
 
-export const columns: ColumnDef<ITask>[] = [
+export const columns: ColumnDef<IMember>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -17,115 +14,108 @@ export const columns: ColumnDef<ITask>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Task Name
+          Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell({ row }) {
-      const name = row.original.name;
-      return <p className="line-clamp-1">{name}</p>;
-    },
-  },
-  {
-    accessorKey: "project",
-    header: ({ column }) => {
+      const user = row.original.user;
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Project
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell({ row }) {
-      const project = row.original.project;
-      return (
-        <div className="flex items-center gap-x-2 text-sm font-medium">
+        <div className="flex items-center gap-x-2">
           <ProjectAvatar
             className="size-6"
-            name={project.name}
-            image={project.image}
+            name={user.name}
+            image={user?.image}
           />
-          <p className="line-clamp-1">{project.name}</p>
+          <p className="line-clamp-1 font-medium">{user.name}</p>
         </div>
       );
     },
   },
   {
-    accessorKey: "assignee",
+    accessorKey: "email",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Assignee
+          Email
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell({ row }) {
-      const assignee = row.original.assignee;
+      const email = row.original.user.email;
       return (
         <div className="flex items-center gap-x-2 text-sm font-medium">
-          <ProjectAvatar className="size-6" name={assignee?.user.name} />
-          <p className="line-clamp-1">{assignee?.user.name} </p>
+          <p className="line-clamp-1">{email}</p>
         </div>
       );
     },
   },
   {
-    accessorKey: "dueDate",
+    accessorKey: "Role",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Due Date
+          Role
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell({ row }) {
-      const dueDate = row.original.dueDate;
-      return <TaskDate value={dueDate} />;
+      const role = row.original.user.role;
+      return (
+        <div className="flex items-center gap-x-2 text-sm font-medium">
+          <p className="line-clamp-1">{role}</p>
+        </div>
+      );
     },
   },
   {
-    accessorKey: "status",
+    accessorKey: "lastActive",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Status
+          Last Active
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell({ row }) {
-      const status = row.original.status;
-      return <Badge variant={status}>{snakeCaseToTitleCase(status)}</Badge>;
+      return <p>N/A</p>;
+    },
+  },
+  {
+    accessorKey: "invitedBy",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Invited By
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell({ row }) {
+      return <p>N/A</p>;
     },
   },
   {
     id: "actions",
-
     cell({ row }) {
-      const id = row.original._id;
-      const projectId = row.original.project._id;
-      return (
-        <TaskActions id={id} projectId={projectId}>
-          <Button variant="ghost" className="size-8 p-0">
-            <MoreVertical className="size-4" />
-          </Button>
-        </TaskActions>
-      );
+      const member = row.original;
+      return <MemberActions member={member} />;
     },
   },
 ];

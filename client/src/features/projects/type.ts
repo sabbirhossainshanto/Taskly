@@ -4,7 +4,7 @@ export interface IProject {
   _id: string;
   name: string;
   image: string;
-  workspaceId: IWorkspace;
+  workspace: IWorkspace;
 }
 export interface IProjectAnalytics {
   taskCount: number;

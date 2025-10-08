@@ -50,7 +50,7 @@ export const UserButton = () => {
       <DropdownMenuTrigger className="outline-none relative">
         <Avatar className="size-8 hover:opacity-75 transition border border-neutral-300">
           <AvatarImage src={image} alt="image" />
-          <AvatarFallback className="bg-neutral-200 font-medium text-neutral-500 flex items-center justify-center">
+          <AvatarFallback className="bg-neutral-200 font-medium text-primary-300 flex items-center justify-center">
             {avatarFallback}
           </AvatarFallback>
         </Avatar>
@@ -64,15 +64,15 @@ export const UserButton = () => {
         <div className="flex gap-4 py-2">
           <Avatar className="size-8 hover:opacity-75 transition border border-neutral-300">
             <AvatarImage src={image} alt="image" />
-            <AvatarFallback className="bg-neutral-200 font-medium text-neutral-500">
+            <AvatarFallback className="bg-neutral-200 font-medium text-primary-300">
               {avatarFallback}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col ">
-            <p className="text-sm font-medium text-neutral-900">
+            <p className="text-sm font-medium text-primary-100">
               {name || "User"}
             </p>
-            <p className="text-xs text-neutral-500">Online</p>
+            <p className="text-xs text-primary-100">Online</p>
           </div>
         </div>
         <DropdownMenuItem className=" flex cursor-pointer border font-light text-sm">
@@ -107,7 +107,7 @@ export const UserButton = () => {
 
         <DropdownMenuItem
           onClick={() => logout()}
-          className="flex cursor-pointer font-light text-xs  items-center py-2 "
+          className="flex cursor-pointer font-light text-sm  items-center py-2 "
         >
           <LogOut className="size-4" />
           Logout

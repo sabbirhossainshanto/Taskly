@@ -81,7 +81,7 @@ const TaskList = ({ data }: TaskListProps) => {
         <div className="flex items-center justify-between">
           <p className="text-lg font-medium">Tasks ({data?.length})</p>
           <Button variant="muted" size="icon" onClick={createTask}>
-            <PlusIcon className="size-4 text-neutral-400" />
+            <PlusIcon className="size-4 text-primary-300" />
           </Button>
         </div>
         <DottedSeparator className="my-4" />
@@ -94,7 +94,7 @@ const TaskList = ({ data }: TaskListProps) => {
                     <p className="text-lg font-medium truncate">{task?.name}</p>
                     <div className="flex items-center gap-x-2">
                       <p>{task?.project?.name}</p>
-                      <div className="size-1 rounded-full bg-neutral-300" />
+                      <div className="size-1 rounded-full bg-primary-300" />
                       <div className="text-sm text-muted-foreground flex items-center">
                         <CalendarIcon className="size-3 mr-1" />
                         <span className="truncate">
@@ -124,11 +124,11 @@ const ProjectList = ({ data }: ProjectListProps) => {
   const { open: createProject } = useCreateProjectModal();
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-white border rounded-lg p-4">
+      <div className="bg-primary-1100 border rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-lg font-medium">Projects ({data?.length})</p>
           <Button variant="secondary" size="icon" onClick={createProject}>
-            <PlusIcon className="size-4 text-neutral-400" />
+            <PlusIcon className="size-4 text-primary-300" />
           </Button>
         </div>
         <DottedSeparator className="my-4" />
@@ -166,12 +166,12 @@ const MemberList = ({ data }: MemberListProps) => {
 
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-white border rounded-lg p-4">
+      <div className="bg-primary-1100 border rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-lg font-medium">Members ({data?.length})</p>
           <Button asChild variant="secondary" size="icon">
             <Link href={`/workspaces/${workspaceId}/members`}>
-              <SettingsIcon className="size-4 text-neutral-400" />
+              <SettingsIcon className="size-4 text-primary-400" />
             </Link>
           </Button>
         </div>
@@ -181,16 +181,13 @@ const MemberList = ({ data }: MemberListProps) => {
             <li key={member?._id}>
               <Card className="shadow-none rounded-lg overflow-hidden">
                 <CardContent className="p-3 flex flex-col items-center gap-x-2">
-                  <MemberAvatar
-                    className="size-12"
-                    name={member?.userId?.name}
-                  />
+                  <MemberAvatar className="size-12" name={member?.user?.name} />
                   <div className="flex flex-col items-center overflow-hidden">
                     <p className="text-lg font-medium line-clamp-1">
-                      {member?.userId?.name}
+                      {member?.user?.name}
                     </p>
                     <p className="text-sm text-muted-foreground line-clamp-1">
-                      {member?.userId?.email}
+                      {member?.user?.email}
                     </p>
                   </div>
                 </CardContent>

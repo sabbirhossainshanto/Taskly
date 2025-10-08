@@ -48,7 +48,7 @@ export const KanbanColumnHeader = ({
         </div>
       </div>
       <Button className="size-5" onClick={open} size="icon" variant="ghost">
-        <PlusIcon className="size-4 text-neutral-500" />
+        <PlusIcon className="size-4 text-primary-300" />
       </Button>
     </div>
   );

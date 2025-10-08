@@ -55,7 +55,7 @@ export const EditProjectForm = ({
     defaultValues: {
       ...initialValues,
       image: initialValues.image ?? "",
-      workspaceId: initialValues.workspaceId._id,
+      workspace: initialValues.workspace._id,
     },
   });
 
@@ -82,7 +82,7 @@ export const EditProjectForm = ({
 
     formData.append(
       "data",
-      JSON.stringify({ workspaceId: values.workspaceId, name: values.name })
+      JSON.stringify({ workspaceId: values.workspace, name: values.name })
     );
 
     mutate({ formData, projectId: initialValues._id });
@@ -109,7 +109,7 @@ export const EditProjectForm = ({
                 ? onCancel
                 : () =>
                     router.push(
-                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues._id}`
+                      `/workspaces/${initialValues.workspace?._id}/projects/${initialValues._id}`
                     )
             }
           >
@@ -162,7 +162,7 @@ export const EditProjectForm = ({
                         ) : (
                           <Avatar className="size-[72px]">
                             <AvatarFallback>
-                              <ImageIcon className="size-[36px] text-neutral-400" />
+                              <ImageIcon className="size-[36px] text-primary-400" />
                             </AvatarFallback>
                           </Avatar>
                         )}

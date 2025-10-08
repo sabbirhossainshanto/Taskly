@@ -110,7 +110,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceProps) => {
                       ) : (
                         <Avatar className="size-[72px]">
                           <AvatarFallback>
-                            <ImageIcon className="size-[36px] text-neutral-400" />
+                            <ImageIcon className="size-[36px] text-primary-400" />
                           </AvatarFallback>
                         </Avatar>
                       )}

@@ -44,7 +44,7 @@ export const ProjectIdClient = () => {
         <div>
           <Button variant="secondary" size="sm" asChild>
             <Link
-              href={`/workspaces/${project.data?.workspaceId._id}/projects/${project.data?._id}/settings`}
+              href={`/workspaces/${project.data?.workspace._id}/projects/${project.data?._id}/settings`}
             >
               <PencilIcon className="size-4 mr-2" />
               Edit Project

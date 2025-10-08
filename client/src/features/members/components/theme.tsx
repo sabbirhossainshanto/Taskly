@@ -26,7 +26,7 @@ export const Theme = () => {
       </CardHeader>
 
       <CardContent className="px-7">
-        <p className="text-xs text-neutral-500 font-medium">Appearance</p>
+        <p className="text-xs text-primary-300 font-medium">Appearance</p>
         <div className="flex  items-center justify-between gap-3 mt-3">
           <div
             onClick={() =>
@@ -37,7 +37,7 @@ export const Theme = () => {
             <Image
               className={cn(
                 theme.appearance === "light" &&
-                  "border-purple-500 border-2 rounded-xl"
+                  "border-secondary-800 border-2 rounded-xl"
               )}
               src="/light.svg"
               alt="light-theme"
@@ -57,7 +57,7 @@ export const Theme = () => {
             <Image
               className={cn(
                 theme.appearance === "dark" &&
-                  "border-purple-500 border-2 rounded-xl"
+                  "border-secondary-800 border-2 rounded-xl"
               )}
               src="/dark.svg"
               alt="dark-theme"
@@ -77,7 +77,7 @@ export const Theme = () => {
             <Image
               className={cn(
                 theme.appearance === "auto" &&
-                  "border-purple-500 border-2 rounded-xl"
+                  "border-secondary-800 border-2 rounded-xl"
               )}
               src="/auto.svg"
               alt="auto-theme"
@@ -89,7 +89,7 @@ export const Theme = () => {
             </p>
           </div>
         </div>
-        <p className="text-xs text-neutral-500 font-medium mt-8">
+        <p className="text-xs text-primary-300 font-medium mt-8">
           Taskly themes
         </p>
         <div className="grid grid-cols-3 gap-3 mt-3">
@@ -102,7 +102,7 @@ export const Theme = () => {
                 "border px-2 py-3 rounded-md flex items-center gap-x-3 text-sm cursor-pointer",
                 item.name === theme.theme
                   ? `${item.border} ${item.shadowBG}`
-                  : "border-neutral-300 text-muted-foreground"
+                  : "border-primary-900 text-muted-foreground"
               )}
               key={item.id}
             >

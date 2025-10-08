@@ -12,10 +12,10 @@ const getWorkspaceMember = async (workspaceId: string) => {
   }
 
   const members = await Member.find({
-    workspaceId,
+    workspace: workspaceId,
   })
-    .populate("workspaceId")
-    .populate("userId");
+    .populate("workspace")
+    .populate("user");
 
   return members;
 };
@@ -25,8 +25,8 @@ const deleteWorkspaceMember = async (
   user: IUser
 ) => {
   const isAdmin = await Member.findOne({
-    userId: user._id,
-    workspaceId,
+    user: user._id,
+    workspace: workspaceId,
   });
 
   if (isAdmin?.role !== USER_ROLE.admin) {
@@ -40,8 +40,8 @@ const deleteWorkspaceMember = async (
   }
 
   const deletedMember = await Member.findOne({
-    workspaceId,
-    userId: memberId,
+    workspace: workspaceId,
+    user: memberId,
   });
 
   if (!deletedMember) {
@@ -49,7 +49,7 @@ const deleteWorkspaceMember = async (
   }
 
   const allMemberInWorkspace = await Member.find({
-    workspaceId,
+    workspace: workspaceId,
   });
 
   if (allMemberInWorkspace.length === 1) {
@@ -60,8 +60,8 @@ const deleteWorkspaceMember = async (
   }
 
   const result = await Member.deleteOne({
-    workspaceId,
-    userId: memberId,
+    workspace: workspaceId,
+    user: memberId,
   });
 
   return result;
@@ -76,8 +76,8 @@ const updateWorkspaceMember = async (
 ) => {
   const { memberId, role, workspaceId } = payload;
   const isAdmin = await Member.findOne({
-    userId: user._id,
-    workspaceId,
+    user: user._id,
+    workspace: workspaceId,
   });
 
   if (isAdmin?.role !== USER_ROLE.admin) {
@@ -91,8 +91,8 @@ const updateWorkspaceMember = async (
   }
 
   const updatingMember = await Member.findOne({
-    workspaceId,
-    userId: memberId,
+    workspace: workspaceId,
+    user: memberId,
   });
 
   if (!updatingMember) {
@@ -100,7 +100,7 @@ const updateWorkspaceMember = async (
   }
 
   const allMemberInWorkspace = await Member.find({
-    workspaceId,
+    workspace: workspaceId,
   });
 
   if (allMemberInWorkspace.length === 1) {
@@ -112,8 +112,8 @@ const updateWorkspaceMember = async (
 
   const result = await Member.updateOne(
     {
-      workspaceId,
-      userId: memberId,
+      workspace: workspaceId,
+      user: memberId,
     },
     {
       role,

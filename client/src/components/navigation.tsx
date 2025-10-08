@@ -40,17 +40,17 @@ export const Navigation = () => {
         const isActive = pathname === fullHref;
 
         return (
-          <Link key={item.href} href={fullHref}>
+          <Link key={item.href} href={fullHref} className="px-4">
             <div
               className={cn(
-                "flex items-center gap-2.5 px-2 py-1 rounded-md font-medium  transition text-primary text-sm my-0.5",
+                "flex items-center gap-2.5 px-2 py-1 rounded-md font-medium  transition text-primary-200 text-sm my-0.5",
                 isActive && "bg-secondary-300 shadow-sm  text-secondary-1000"
               )}
             >
               <item.icon
                 className={cn(
                   "size-5",
-                  isActive ? "text-secondary-1000" : "text-primary"
+                  isActive ? "text-secondary-1000" : "text-primary-200"
                 )}
               />
               {item.label}

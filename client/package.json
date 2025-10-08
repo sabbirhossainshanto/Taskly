@@ -55,6 +55,7 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "vaul": "^1.1.2",
+    "xlsx": "^0.18.5",
     "zod": "^4.1.5"
   },
   "devDependencies": {
@@ -64,6 +65,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/xlsx": "^0.0.36",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "tailwindcss": "^4.1.12",

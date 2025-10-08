@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 interface CreateProjectProps {
   onCancel?: () => void;
 }
-const createProjectFormSchema = createProjectSchema.omit({ workspaceId: true });
+const createProjectFormSchema = createProjectSchema.omit({ workspace: true });
 export const CreateProjectForm = ({ onCancel }: CreateProjectProps) => {
   const router = useRouter();
   const workspaceId = useWorkspaceId();
@@ -47,7 +47,10 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectProps) => {
       formData.append("file", values.image);
     }
 
-    formData.append("data", JSON.stringify({ name: values.name, workspaceId }));
+    formData.append(
+      "data",
+      JSON.stringify({ name: values.name, workspace: workspaceId })
+    );
     mutate(formData, {
       onSuccess({ data }) {
         form.reset();
@@ -112,7 +115,7 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectProps) => {
                       ) : (
                         <Avatar className="size-[72px]">
                           <AvatarFallback>
-                            <ImageIcon className="size-[36px] text-neutral-400" />
+                            <ImageIcon className="size-[36px] text-primary-400" />
                           </AvatarFallback>
                         </Avatar>
                       )}

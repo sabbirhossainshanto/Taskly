@@ -8,7 +8,7 @@ export const createProjectSchema = z.object({
       z.string().transform((value) => (value === "" ? undefined : value)),
     ])
     .optional(),
-  workspaceId: z.string(),
+  workspace: z.string(),
 });
 export const updateProjectSchema = z.object({
   name: z.string().trim().min(1, "Minimum 1 character required").optional(),
@@ -18,5 +18,5 @@ export const updateProjectSchema = z.object({
       z.string().transform((value) => (value === "" ? undefined : value)),
     ])
     .optional(),
-  workspaceId: z.string(),
+  workspace: z.string(),
 });

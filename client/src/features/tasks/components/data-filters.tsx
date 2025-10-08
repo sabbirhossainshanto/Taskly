@@ -34,7 +34,7 @@ export const DataFilters = ({ hideProjectFilter }: DataFiltersProps) => {
   }));
   const memberOptions = members?.data?.map((member) => ({
     value: member._id,
-    label: member.userId.name,
+    label: member.user.name,
   }));
 
   const [{ assignee, dueDate, projectId, status }, setFilters] =

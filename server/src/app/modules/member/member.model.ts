@@ -7,12 +7,12 @@ const memberSchema = new Schema<IMember>(
       type: String,
       required: true,
     },
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "User",
     },
-    workspaceId: {
+    workspace: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "Workspace",

@@ -3,7 +3,7 @@ import { IWorkspace } from "../workspaces/type";
 
 export interface IMember {
   _id: string;
-  userId: IUser;
-  workspaceId: IWorkspace;
+  user: IUser;
+  workspace: IWorkspace;
   role: IUserRole;
 }

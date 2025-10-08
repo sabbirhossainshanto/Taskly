@@ -1,146 +1,92 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWorkspaceId } from "../hooks/use-workspace-id";
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, MoreVerticalIcon } from "lucide-react";
-import Link from "next/link";
-import { DottedSeparator } from "@/components/dotted-separator";
+import {
+  ChevronDownIcon,
+  DownloadIcon,
+  PlusIcon,
+  SearchIcon,
+} from "lucide-react";
 import { useGetMembers } from "@/features/members/api/use-get-members";
-import { Fragment } from "react";
-import { MemberAvatar } from "@/features/members/components/member-avatar";
-import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { DataTable } from "@/features/workspaces/components/data-table";
+import { columns } from "@/features/workspaces/components/columns";
+import * as XLSX from "xlsx";
+import { useRef } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useDeleteMember } from "@/features/members/api/use-delete-member";
-import { useUpdateMember } from "@/features/members/api/use-update-member";
-import { useConfirm } from "@/hooks/use-confirm";
-import { IUserRole, USER_ROLE } from "@/features/auth/type";
+import { useInviteModal } from "@/features/members/hooks/use-invite-modal";
 
 export const MembersList = () => {
+  const { open: openInviteModal } = useInviteModal();
+  const ref = useRef<HTMLDivElement | null>(null);
   const workspaceId = useWorkspaceId();
-  const [ConfirmDialog, confirm] = useConfirm(
-    "Remove member",
-    "This member will be removed from workspace",
-    "destructive"
-  );
   const { data } = useGetMembers({ workspaceId });
 
-  const { mutate: deleteMember, isPending: isDeletingMember } =
-    useDeleteMember();
-  const { mutate: updateMember, isPending: isUpdatingMember } =
-    useUpdateMember();
-
-  const handleUpdateMember = (
-    memberId: string,
-    role: IUserRole,
-    workspaceId: string
-  ) => {
-    updateMember({
-      memberId,
-      role,
-      workspaceId,
-    });
+  const handleExport = () => {
+    const workspaceName = data?.data?.[0]?.workspace?.name
+      ?.split(" ")
+      .join("-");
+    const workbook = XLSX.utils.table_to_book(ref.current);
+    XLSX.writeFile(workbook, `${workspaceName}-report.xlsb`);
   };
 
-  const handleDeleteMember = async (workspaceId: string, memberId: string) => {
-    const ok = await confirm();
-    if (!ok) return;
-    deleteMember(
-      { memberId, workspaceId },
-      {
-        onSuccess() {
-          window.location.reload();
-        },
-      }
-    );
-  };
   return (
-    <Card className="w-full h-full border-none shadow-none">
-      <ConfirmDialog />
-      <CardHeader className="flex flex-row items-center gap-x-4 p-7 space-y-0">
-        <Button asChild variant="secondary" size="sm">
-          <Link href={`/workspaces/${workspaceId}`}>
-            <ArrowLeftIcon className="size-4 mr-2" />
-            Back
-          </Link>
+    <div className="w-full h-full p-4">
+      <div className="flex items-center justify-between">
+        <h6 className="text-primary text-lg md:text-2xl font-medium">
+          Manage People
+        </h6>
+        <Button
+          onClick={handleExport}
+          size="sm"
+          variant="outline"
+          className="text-primary/70"
+        >
+          <DownloadIcon className="size-4" />
+          <span className="text-sm">Export</span>
         </Button>
-        <CardTitle className="text-xl font-bold">Members List</CardTitle>
-      </CardHeader>
-      <div className="px-7">
-        <DottedSeparator />
       </div>
-      <CardContent className="p-7">
-        {data?.data.map((member, index) => (
-          <Fragment key={index}>
-            <div className="flex items-center gap-2">
-              <MemberAvatar
-                className="size-10"
-                fallbackClassName="text-lg"
-                name={member.userId.name}
-              />
-              <div className="flex flex-col">
-                <p className="text-sm font-medium">{member.userId.name}</p>
-                <p className="text-xs text-muted-foreground">
-                  {member.userId.email}
-                </p>
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="ml-auto" variant="secondary" size="icon">
-                    <MoreVerticalIcon className="size-4 text-muted-foreground" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent side="bottom" align="end">
-                  <DropdownMenuItem
-                    className="font-medium"
-                    onClick={() =>
-                      handleUpdateMember(
-                        member.userId._id,
-                        USER_ROLE.admin,
-                        member.workspaceId._id
-                      )
-                    }
-                    disabled={isUpdatingMember}
-                  >
-                    Set as Administrator
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="font-medium"
-                    onClick={() =>
-                      handleUpdateMember(
-                        member.userId._id,
-                        USER_ROLE.member,
-                        member.workspaceId._id
-                      )
-                    }
-                    disabled={isUpdatingMember}
-                  >
-                    Set as Member
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="font-medium text-amber-700"
-                    onClick={() =>
-                      handleDeleteMember(
-                        member.workspaceId._id,
-                        member.userId._id
-                      )
-                    }
-                    disabled={isDeletingMember}
-                  >
-                    Remove {member.userId.name}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            {index < data?.data.length - 1 && <Separator className="my-2.5" />}
-          </Fragment>
-        ))}
-      </CardContent>
-    </Card>
+
+      <div className="my-3 relative">
+        <Input
+          className="placeholder:text-sm pl-8"
+          placeholder="Search or invite by email"
+        />
+        <SearchIcon className="absolute top-4 left-2.5 size-4" />
+        <Button
+          onClick={openInviteModal}
+          className="absolute right-1.5 top-2.5 h-7"
+          size="sm"
+        >
+          <PlusIcon className="size-3" />
+          <span className="text-[10px]">Invite people</span>
+        </Button>
+      </div>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className="bg-secondary-300 w-fit px-1 py-0.5 rounded-lg flex items-center gap-x-1 text-xs border border-primary-900 text-secondary-900 font-medium cursor-pointer">
+            <span> All Users ({data?.data?.length})</span>
+            <ChevronDownIcon className="size-4" />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="start">
+          <DropdownMenuItem className="font-medium">Admin</DropdownMenuItem>
+          <DropdownMenuItem className="font-medium">Member</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <div ref={ref} className="mt-8">
+        {data && data?.data?.length > 0 && (
+          <DataTable columns={columns} data={data?.data} />
+        )}
+      </div>
+    </div>
   );
 };
