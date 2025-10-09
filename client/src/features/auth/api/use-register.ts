@@ -1,6 +1,5 @@
 import { IResponse } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import z from "zod";
 import { registerSchema } from "../schemas";
@@ -9,7 +8,6 @@ import Cookies from "js-cookie";
 import { AxiosSecure } from "@/lib/AxiosSecure";
 
 export const useRegister = () => {
-  const router = useRouter();
   const queryClient = useQueryClient();
   const mutation = useMutation<
     IResponse<{ accessToken: string; refreshToken: string }>,
@@ -26,7 +24,6 @@ export const useRegister = () => {
     onSuccess() {
       toast.success("Registered successfully");
       queryClient.invalidateQueries({ queryKey: ["current"] });
-      router.push("/");
     },
     onError(error) {
       if (error instanceof AxiosError) {

@@ -1,7 +1,6 @@
 import { endOfMonth, startOfMonth, subMonths } from "date-fns";
 import AppError from "../../errors/AppError";
 import { fileUploader } from "../../utils/fileUploader";
-import { generateInviteCode } from "../../utils/generateInviteCode";
 import { Member } from "../member/member.model";
 import { USER_ROLE } from "../user/user.constant";
 import { IUser } from "../user/user.interface";
@@ -10,6 +9,7 @@ import { Workspace } from "./workspace.model";
 import httpStatus from "http-status";
 import { TaskStatus } from "../task/task.interface";
 import { Task } from "../task/task.model";
+import { verifyToken } from "../../utils/verifyToken";
 
 const createWorkspace = async (
   payload: IWorkspace,
@@ -20,8 +20,6 @@ const createWorkspace = async (
     const { secure_url } = await fileUploader.uploadToCloudinary(file);
     payload.image = secure_url;
   }
-  const inviteCode = generateInviteCode(10);
-  payload.inviteCode = inviteCode;
   payload.user = user._id;
 
   const workspace = await Workspace.create(payload);
@@ -259,39 +257,24 @@ export const deleteWorkspace = async (workspaceId: string, user: IUser) => {
   return deletedWorkspace;
 };
 
-export const resetInviteCode = async (workspaceId: string, user: IUser) => {
-  const isUserAdmin = await Member.findOne({
-    user: user._id,
-  });
-
-  if (isUserAdmin?.role !== USER_ROLE.admin) {
-    throw new AppError(httpStatus.NOT_FOUND, "You are not authorized");
-  }
-
-  const isWorkspaceExist = await Workspace.findOne({
-    _id: workspaceId,
-    user: user._id,
-  });
-
-  if (!isWorkspaceExist) {
-    throw new AppError(httpStatus.NOT_FOUND, "This workspace is not exist");
-  }
-  const inviteCode = generateInviteCode(10);
-  const updatedWorkspace = await Workspace.findByIdAndUpdate(workspaceId, {
-    inviteCode,
-  });
-  return updatedWorkspace;
-};
-
 export const joinWorkspace = async (
-  workspaceId: string,
-  payload: { inviteCode: string },
+  payload: { token: string },
   user: IUser
 ) => {
+  const { email, role, workspaceId } = verifyToken(payload.token) as {
+    email: string;
+    role: string;
+    workspaceId: string;
+  };
+
+  if (email !== user?.email) {
+    throw new AppError(httpStatus.BAD_REQUEST, "You are not authorized");
+  }
+
   const workspace = await Workspace.findById(workspaceId);
 
   if (!workspace) {
-    throw new AppError(httpStatus.NOT_FOUND, "This workspace is not exist");
+    throw new AppError(httpStatus.NOT_FOUND, "Workspace not found");
   }
 
   const member = await Member.findOne({
@@ -300,18 +283,19 @@ export const joinWorkspace = async (
   });
 
   if (member) {
-    throw new AppError(httpStatus.NOT_FOUND, "You are not authorized");
+    throw new AppError(httpStatus.NOT_FOUND, "You are already a member");
   }
 
-  if (workspace.inviteCode !== payload.inviteCode) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Invalid invite code");
-  }
-
-  const result = await Member.create({
-    role: USER_ROLE.member,
+  await Member.create({
+    role,
     user: user._id,
     workspace: workspaceId,
   });
+
+  const result = await Member.findOne({
+    user: user._id,
+    workspace: workspaceId,
+  }).populate("workspace");
   return result;
 };
 
@@ -320,7 +304,6 @@ export const workspaceService = {
   getUserWorkspaces,
   updateWorkspace,
   deleteWorkspace,
-  resetInviteCode,
   joinWorkspace,
   getSingleWorkspace,
   getWorkspaceAnalytics,

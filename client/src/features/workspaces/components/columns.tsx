@@ -69,7 +69,7 @@ export const columns: ColumnDef<IMember>[] = [
       );
     },
     cell({ row }) {
-      const role = row.original.user.role;
+      const role = row.original.role;
       return (
         <div className="flex items-center gap-x-2 text-sm font-medium">
           <p className="line-clamp-1">{role}</p>

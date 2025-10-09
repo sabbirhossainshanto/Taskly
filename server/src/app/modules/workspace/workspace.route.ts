@@ -36,6 +36,10 @@ router.patch(
 
 router.delete("/:workspaceId", auth, workspaceController.deleteWorkspace);
 
-router.post("/:workspaceId/join", auth, workspaceController.joinWorkspace);
-router.post("/:workspaceId", auth, workspaceController.resetInviteCode);
+router.post(
+  "/join",
+  auth,
+  validateRequest(workspaceValidation.joinWorkspaceSchema),
+  workspaceController.joinWorkspace
+);
 export const workspaceRoutes = router;

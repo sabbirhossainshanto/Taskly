@@ -10,9 +10,6 @@ const workspaceSchema = new Schema<IWorkspace>(
     image: {
       type: String,
     },
-    inviteCode: {
-      type: String,
-    },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",

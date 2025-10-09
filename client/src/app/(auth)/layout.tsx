@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -11,6 +11,11 @@ interface AuthLayoutProps {
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
   const pathname = usePathname();
+  const params = useSearchParams();
+  const workspaceId = params.get("workspaceId");
+  const token = params.get("token");
+  const email = params.get("email");
+  const isUserInvited = !!(workspaceId && token && email);
   const isSignIn = pathname === "/sign-in";
 
   return (
@@ -18,22 +23,24 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
       <div className="mx-auto max-w-screen-2xl p-2 lg:p-4">
         <nav className="flex justify-between items-center">
           <Image src="/logo.svg" height={56} width={152} alt="logo" />
-          <div className="flex items-center gap-x-3">
-            {isSignIn ? (
-              <p className="font-medium text-base text-neutral-900 hidden lg:block">
-                Don&apos;t have an account?
-              </p>
-            ) : (
-              <p className="font-medium text-base text-neutral-900 hidden lg:block">
-                Already playing with Taskly?
-              </p>
-            )}
-            <Button asChild variant="primary">
-              <Link href={isSignIn ? "/sign-up" : "/sign-in"}>
-                {isSignIn ? "Sign UP" : "Sign In"}
-              </Link>
-            </Button>
-          </div>
+          {!isUserInvited && (
+            <div className="flex items-center gap-x-3">
+              {isSignIn ? (
+                <p className="font-medium text-base text-neutral-900 hidden lg:block">
+                  Don&apos;t have an account?
+                </p>
+              ) : (
+                <p className="font-medium text-base text-neutral-900 hidden lg:block">
+                  Already playing with Taskly?
+                </p>
+              )}
+              <Button asChild variant="primary">
+                <Link href={isSignIn ? "/sign-up" : "/sign-in"}>
+                  {isSignIn ? "Sign UP" : "Sign In"}
+                </Link>
+              </Button>
+            </div>
+          )}
         </nav>
         <div className="flex flex-col items-center justify-center pt-4 md:pt-14 ">
           <div className="login-page-new__main-bg hidden lg:block"></div>

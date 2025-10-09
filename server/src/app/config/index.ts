@@ -16,4 +16,7 @@ export default {
   cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
   cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
   google_client_id: process.env.GOOGLE_CLIENT_ID,
+  email_user: process.env.EMAIL_USER,
+  email_pass: process.env.EMAIL_PASS,
+  client_base_url: process.env.CLIENT_BASE_URL,
 };

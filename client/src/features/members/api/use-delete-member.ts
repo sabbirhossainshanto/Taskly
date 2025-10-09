@@ -1,13 +1,12 @@
 import { AxiosSecure } from "@/lib/AxiosSecure";
 import { IResponse } from "@/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import { toast } from "sonner";
 import { IMember } from "../types";
 import { AxiosError } from "axios";
 
 export const useDeleteMember = () => {
-  const queryClient = useQueryClient();
   const mutation = useMutation<
     IResponse<IMember>,
     Error,
@@ -21,7 +20,6 @@ export const useDeleteMember = () => {
     },
     onSuccess() {
       toast.success("Member deleted");
-      queryClient.invalidateQueries({ queryKey: ["members"] });
     },
     onError(error) {
       if (error instanceof AxiosError) {

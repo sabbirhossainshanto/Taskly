@@ -5,7 +5,12 @@ import validateRequest from "../../middlewares/validateRequest";
 import { memberValidation } from "./member.validation";
 
 const router = Router();
-
+router.post(
+  "/invite-member",
+  auth,
+  validateRequest(memberValidation.inviteMemberSchema),
+  memberController.inviteMember
+);
 router.get("/:workspaceId", auth, memberController.getWorkspaceMember);
 router.delete(
   "/:workspaceId/:memberId",

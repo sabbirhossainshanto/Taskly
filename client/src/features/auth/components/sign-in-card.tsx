@@ -3,8 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-
-// import { FaGithub } from "react-icons/fa";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,38 +19,50 @@ import { loginSchema } from "../schemas";
 import { useLogin } from "../api/use-login";
 import { Divider } from "@/components/divider";
 import GoogleLoginButton from "./google-login-button";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export const SignInCard = () => {
+  const router = useRouter();
+  const params = useSearchParams();
+
+  const workspaceId = params.get("workspaceId");
+  const token = params.get("token");
+  const email = params.get("email");
+  const isUserInvited = !!(workspaceId && token && email);
   const { mutate, isPending } = useLogin();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      email: email ? email : "",
       password: "",
     },
   });
 
   const onSubmit = (values: z.infer<typeof loginSchema>) => {
-    mutate(values);
+    mutate(values, {
+      onSuccess() {
+        if (isUserInvited) {
+          router.push(`/workspaces/${workspaceId}/join?token=${token}`);
+        } else {
+          router.push("/");
+        }
+      },
+    });
   };
   return (
-    <Card className="w-full h-full md:w-[480px] border-none shadow-none z-10">
+    <Card className="w-full h-full md:w-[480px] border-none shadow-none z-10 gap-2">
       <CardHeader className="flex flex-col items-center justify-center text-center px-7">
         <CardTitle className="text-2xl lg:text-3xl font-bold">
-          Welcome back!
+          {isUserInvited ? "Login to join workspace" : "Welcome back!"}
         </CardTitle>
       </CardHeader>
       <CardContent className="px-3 md:px-[50]  flex flex-col gap-y-2">
         <GoogleLoginButton />
-        {/* <Button
-          disabled={isPending}
-          variant="secondary"
-          size="lg"
-          className="w-full"
-        >
-          <FaGithub className="mr-2 size-5" />
-          Login with Github
-        </Button> */}
+        {isUserInvited && (
+          <span className="text-[10px] text-primary-500">
+            Note: Please login by invited email to join workspace
+          </span>
+        )}
       </CardContent>
       <Divider className="px-3 md:px-[50px]" />
 
@@ -67,6 +77,7 @@ export const SignInCard = () => {
                   <FormLabel className="pl-1 text-[12px]">Work Email</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={!!email}
                       {...field}
                       type="email"
                       placeholder="Enter your work email"

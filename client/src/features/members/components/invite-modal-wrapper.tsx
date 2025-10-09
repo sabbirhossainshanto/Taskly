@@ -22,24 +22,47 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import { useInviteMember } from "../api/use-invite-member";
+import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
+import { USER_ROLE } from "@/features/auth/type";
+import { useInviteModal } from "../hooks/use-invite-modal";
 
 const invitePeopleSchema = z.object({
   email: z.email(),
-  role: z.string(),
+  role: z.enum([
+    USER_ROLE.admin,
+    USER_ROLE.member,
+    USER_ROLE.super_admin,
+    USER_ROLE.user,
+  ]),
 });
 
 export const InviteModalWrapper = () => {
+  const { close } = useInviteModal();
+  const workspaceId = useWorkspaceId();
+  const { mutate: inviteMember, isPending } = useInviteMember();
   const form = useForm<z.infer<typeof invitePeopleSchema>>({
     resolver: zodResolver(invitePeopleSchema),
     defaultValues: {
       email: "",
-      role: "",
+      role: "member",
     },
   });
 
   const onSubmit = (values: z.infer<typeof invitePeopleSchema>) => {
-    console.log(values);
+    inviteMember(
+      {
+        ...values,
+        workspaceId,
+      },
+      {
+        onSuccess() {
+          close();
+        },
+      }
+    );
   };
+
   return (
     <Card className="w-full h-full border-none shadow-none">
       <CardHeader className="flex flex-col">
@@ -97,6 +120,7 @@ export const InviteModalWrapper = () => {
 
             <div className="w-full flex items-center justify-end gap-x-3">
               <Button
+                disabled={isPending}
                 type="submit"
                 className="w-fit"
                 size="sm"
@@ -104,7 +128,12 @@ export const InviteModalWrapper = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit" className="w-fit" size="sm">
+              <Button
+                disabled={isPending}
+                type="submit"
+                className="w-fit"
+                size="sm"
+              >
                 Send invite
               </Button>
             </div>

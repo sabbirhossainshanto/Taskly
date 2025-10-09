@@ -1,30 +1,18 @@
 import { AxiosSecure } from "@/lib/AxiosSecure";
 import { IResponse } from "@/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { IWorkspace } from "../type";
 import { AxiosError } from "axios";
+import { IMember } from "@/features/members/types";
 
 export const useJoinWorkspace = () => {
-  const queryClient = useQueryClient();
-  const mutation = useMutation<
-    IResponse<IWorkspace>,
-    Error,
-    { workspaceId: string; inviteCode: string }
-  >({
-    mutationFn: async ({ workspaceId, inviteCode }) => {
-      const { data } = await AxiosSecure.post(
-        `/workspaces/${workspaceId}/join`,
-        {
-          inviteCode,
-        }
-      );
+  const mutation = useMutation<IResponse<IMember>, Error, { token: string }>({
+    mutationFn: async ({ token }) => {
+      const { data } = await AxiosSecure.post(`/workspaces/join`, { token });
       return data;
     },
     onSuccess(data) {
       toast.success(data.message);
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      queryClient.invalidateQueries({ queryKey: ["workspace", data.data._id] });
     },
     onError(error) {
       if (error instanceof AxiosError) {

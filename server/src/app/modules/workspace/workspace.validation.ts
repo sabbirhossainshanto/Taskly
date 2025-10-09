@@ -23,7 +23,14 @@ const updateWorkspacesSchema = z.object({
   }),
 });
 
+const joinWorkspaceSchema = z.object({
+  body: z.object({
+    token: z.string(),
+  }),
+});
+
 export const workspaceValidation = {
   createWorkspacesSchema,
   updateWorkspacesSchema,
+  joinWorkspaceSchema,
 };

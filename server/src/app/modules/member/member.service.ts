@@ -4,6 +4,27 @@ import httpStatus from "http-status";
 import { Member } from "./member.model";
 import { IUser, IUserRole } from "../user/user.interface";
 import { USER_ROLE } from "../user/user.constant";
+import { sendEmail } from "../../utils/sendEmail";
+import jwt from "jsonwebtoken";
+import config from "../../config";
+import { User } from "../user/user.model";
+
+const inviteMember = async (payload: {
+  role: IUserRole;
+  email: string;
+  workspaceId: string;
+}) => {
+  const user = await User.findOne({
+    email: payload.email,
+  });
+  const authRoute = user ? "sign-in" : "sign-up";
+  const token = jwt.sign(payload, config.jwt_access_secret as string, {
+    expiresIn: "1d",
+  });
+
+  const generatedLink = `${config.client_base_url}/workspaces/${payload.workspaceId}/join?email=${payload.email}&token=${token}&authRoute=${authRoute}`;
+  await sendEmail(payload.email, generatedLink);
+};
 
 const getWorkspaceMember = async (workspaceId: string) => {
   const isWorkspaceExist = await Workspace.findById(workspaceId);
@@ -127,4 +148,5 @@ export const memberService = {
   getWorkspaceMember,
   deleteWorkspaceMember,
   updateWorkspaceMember,
+  inviteMember,
 };

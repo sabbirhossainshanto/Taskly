@@ -17,6 +17,11 @@ const memberSchema = new Schema<IMember>(
       required: true,
       ref: "Workspace",
     },
+    status: {
+      type: String,
+      enum: ["pending", "accepted", "rejected"],
+      default: "pending",
+    },
   },
   {
     timestamps: true,

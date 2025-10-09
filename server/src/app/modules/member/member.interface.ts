@@ -6,4 +6,5 @@ export interface IMember {
   user: Types.ObjectId;
   workspace: Types.ObjectId;
   role: IUserRole;
+  status: "pending" | "accepted" | "rejected";
 }

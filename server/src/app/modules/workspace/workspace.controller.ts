@@ -78,25 +78,8 @@ const deleteWorkspace = catchAsync(async (req, res) => {
   });
 });
 
-const resetInviteCode = catchAsync(async (req, res) => {
-  const result = await workspaceService.resetInviteCode(
-    req.params.workspaceId,
-    req.user
-  );
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "Workspace invited code reset successful",
-    data: result,
-  });
-});
-
 const joinWorkspace = catchAsync(async (req, res) => {
-  const result = await workspaceService.joinWorkspace(
-    req.params.workspaceId,
-    req.body,
-    req.user
-  );
+  const result = await workspaceService.joinWorkspace(req.body, req.user);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -111,7 +94,6 @@ export const workspaceController = {
   getSingleWorkspace,
   updateWorkspace,
   deleteWorkspace,
-  resetInviteCode,
   joinWorkspace,
   getWorkspaceAnalytics,
 };

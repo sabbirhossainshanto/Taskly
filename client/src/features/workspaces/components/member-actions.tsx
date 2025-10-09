@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { IUserRole, USER_ROLE } from "@/features/auth/type";
 import { useDeleteMember } from "@/features/members/api/use-delete-member";
+import { useGetMembers } from "@/features/members/api/use-get-members";
 import { useUpdateMember } from "@/features/members/api/use-update-member";
 import { IMember } from "@/features/members/types";
 import { useConfirm } from "@/hooks/use-confirm";
@@ -22,6 +23,7 @@ export const MemberActions = ({ member }: MemberActionsProps) => {
     "This member will be removed from workspace",
     "destructive"
   );
+  const { refetch } = useGetMembers({ workspaceId: member.workspace._id });
   const { mutate: deleteMember, isPending: isDeletingMember } =
     useDeleteMember();
   const { mutate: updateMember, isPending: isUpdatingMember } =
@@ -32,11 +34,18 @@ export const MemberActions = ({ member }: MemberActionsProps) => {
     role: IUserRole,
     workspaceId: string
   ) => {
-    updateMember({
-      memberId,
-      role,
-      workspaceId,
-    });
+    updateMember(
+      {
+        memberId,
+        role,
+        workspaceId,
+      },
+      {
+        onSuccess() {
+          refetch();
+        },
+      }
+    );
   };
 
   const handleDeleteMember = async (workspaceId: string, memberId: string) => {
@@ -46,7 +55,7 @@ export const MemberActions = ({ member }: MemberActionsProps) => {
       { memberId, workspaceId },
       {
         onSuccess() {
-          window.location.reload();
+          refetch();
         },
       }
     );
