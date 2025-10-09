@@ -8,12 +8,15 @@ import { sendEmail } from "../../utils/sendEmail";
 import jwt from "jsonwebtoken";
 import config from "../../config";
 import { User } from "../user/user.model";
+import { inviteMemberHtml } from "../../utils/inviteMemberHtml";
+import mongoose from "mongoose";
 
 const inviteMember = async (payload: {
   role: IUserRole;
   email: string;
   workspaceId: string;
 }) => {
+  const workspace = await Workspace.findById(payload.workspaceId);
   const user = await User.findOne({
     email: payload.email,
   });
@@ -23,20 +26,74 @@ const inviteMember = async (payload: {
   });
 
   const generatedLink = `${config.client_base_url}/workspaces/${payload.workspaceId}/join?email=${payload.email}&token=${token}&authRoute=${authRoute}`;
-  await sendEmail(payload.email, generatedLink);
+  const html = inviteMemberHtml({
+    acceptLink: generatedLink,
+    declineLink: generatedLink,
+    email: config.email_user as string,
+    mailTo: `mailto:${config.email_user}`,
+    name: "Sabbir Hossain",
+    workspaceName: workspace ? workspace?.name : "Workspace",
+  });
+  await sendEmail(payload.email, html);
 };
 
-const getWorkspaceMember = async (workspaceId: string) => {
+const getWorkspaceMember = async (
+  workspaceId: string,
+  query: { searchTerm?: string; role?: string }
+) => {
+  const { role, searchTerm } = query;
+
+  // Check if workspace exists
   const isWorkspaceExist = await Workspace.findById(workspaceId);
   if (!isWorkspaceExist) {
-    throw new AppError(httpStatus.NOT_FOUND, "This workspace is not exist");
+    throw new AppError(httpStatus.NOT_FOUND, "This workspace does not exist");
   }
 
-  const members = await Member.find({
-    workspace: workspaceId,
-  })
-    .populate("workspace")
-    .populate("user");
+  // ✅ Explicitly type pipeline as mongoose.PipelineStage[]
+  const pipeline: mongoose.PipelineStage[] = [
+    {
+      $match: {
+        workspace: new mongoose.Types.ObjectId(workspaceId),
+        ...(role ? { role } : {}),
+      },
+    },
+    {
+      $lookup: {
+        from: "users", // must match your actual User collection name
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    { $unwind: "$user" },
+  ];
+
+  // Add search condition if searchTerm exists
+  if (searchTerm) {
+    pipeline.push({
+      $match: {
+        $or: [
+          { role: { $regex: searchTerm, $options: "i" } }, // from Member
+          { "user.email": { $regex: searchTerm, $options: "i" } }, // from User
+          { "user.name": { $regex: searchTerm, $options: "i" } }, // from User
+        ],
+      },
+    });
+  }
+
+  pipeline.push({
+    $lookup: {
+      from: "workspaces",
+      localField: "workspace",
+      foreignField: "_id",
+      as: "workspace",
+    },
+  });
+
+  pipeline.push({ $unwind: "$workspace" });
+
+  // Run aggregation
+  const members = await Member.aggregate(pipeline);
 
   return members;
 };

@@ -21,12 +21,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useInviteModal } from "@/features/members/hooks/use-invite-modal";
+import { useMemberFilters } from "@/features/members/hooks/use-member-filter";
+import { USER_ROLE } from "@/features/auth/type";
 
 export const MembersList = () => {
+  const [{ role, searchTerm }, setFilters] = useMemberFilters();
   const { open: openInviteModal } = useInviteModal();
   const ref = useRef<HTMLDivElement | null>(null);
   const workspaceId = useWorkspaceId();
-  const { data } = useGetMembers({ workspaceId });
+  const { data } = useGetMembers({ workspaceId, role, searchTerm });
 
   const handleExport = () => {
     const workspaceName = data?.data?.[0]?.workspace?.name
@@ -55,6 +58,7 @@ export const MembersList = () => {
 
       <div className="my-3 relative">
         <Input
+          onChange={(e) => setFilters({ searchTerm: e.target.value })}
           className="placeholder:text-sm pl-8"
           placeholder="Search or invite by email"
         />
@@ -69,18 +73,50 @@ export const MembersList = () => {
         </Button>
       </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <div className="bg-secondary-300 w-fit px-1 py-0.5 rounded-lg flex items-center gap-x-1 text-xs border border-primary-900 text-secondary-900 font-medium cursor-pointer">
-            <span> All Users ({data?.data?.length})</span>
-            <ChevronDownIcon className="size-4" />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuItem className="font-medium">Admin</DropdownMenuItem>
-          <DropdownMenuItem className="font-medium">Member</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex items-center gap-x-3">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="bg-secondary-400 w-fit px-1 py-2 rounded-md flex items-center gap-x-1 text-xs border border-primary-1000 text-secondary-900 font-medium cursor-pointer">
+              <span> All Users ({data?.data?.length})</span>
+              <ChevronDownIcon className="size-4" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="start">
+            <DropdownMenuItem
+              onClick={() => setFilters({ role: null })}
+              className="font-medium cursor-pointer"
+            >
+              All member
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => setFilters({ role: USER_ROLE.admin })}
+              className="font-medium cursor-pointer"
+            >
+              Admin
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => setFilters({ role: USER_ROLE.member })}
+              className="font-medium cursor-pointer"
+            >
+              Member
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Button
+          onClick={() =>
+            setFilters({
+              role: null,
+              searchTerm: null,
+            })
+          }
+          variant="outline"
+          size="sm"
+          className="text-xs text-primary/60"
+        >
+          Reset Filter
+        </Button>
+      </div>
 
       <div ref={ref} className="mt-8">
         {data && data?.data?.length > 0 && (

@@ -14,7 +14,10 @@ const inviteMember = catchAsync(async (req, res) => {
 });
 
 const getWorkspaceMember = catchAsync(async (req, res) => {
-  const result = await memberService.getWorkspaceMember(req.params.workspaceId);
+  const result = await memberService.getWorkspaceMember(
+    req.params.workspaceId,
+    req.query
+  );
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
