@@ -14,8 +14,8 @@ const task_model_1 = require("../task/task.model");
 const task_interface_1 = require("../task/task.interface");
 const createProject = async (payload, file, user) => {
     const member = await member_model_1.Member.findOne({
-        workspaceId: payload.workspaceId,
-        userId: user._id,
+        workspace: payload.workspace,
+        user: user._id,
     });
     if (!member) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "You are not a member of this workspace");
@@ -29,33 +29,33 @@ const createProject = async (payload, file, user) => {
 };
 const getWorkspaceProjects = async (workspaceId, user) => {
     const member = await member_model_1.Member.findOne({
-        workspaceId,
-        userId: user._id,
+        workspace: workspaceId,
+        user: user._id,
     });
     if (!member) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "You are not a member of this workspace");
     }
     const workspaces = await project_model_1.Project.find({
-        workspaceId,
+        workspace: workspaceId,
     });
     return workspaces;
 };
 const getSingleProject = async (projectId, user) => {
     const project = await project_model_1.Project.findById(projectId);
     const member = await member_model_1.Member.findOne({
-        workspaceId: project?.workspaceId,
-        userId: user?._id,
+        workspace: project?.workspace,
+        user: user?._id,
     });
     if (!member) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "You are not a member of this project");
     }
-    return await project_model_1.Project.findById(projectId).populate("workspaceId");
+    return await project_model_1.Project.findById(projectId).populate("workspace");
 };
 const getProjectAnalytics = async (projectId, user) => {
     const project = await project_model_1.Project.findById(projectId);
     const member = await member_model_1.Member.findOne({
-        workspaceId: project?.workspaceId,
-        userId: user?._id,
+        workspace: project?.workspace,
+        user: user?._id,
     });
     if (!member) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "You are not a member of this project");
@@ -190,8 +190,8 @@ const updateProject = async (projectId, payload, file, user) => {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "This project is not exist");
     }
     const member = await member_model_1.Member.findOne({
-        userId: user._id,
-        workspaceId: existingProject?.workspaceId,
+        user: user._id,
+        workspace: existingProject?.workspace,
     });
     if (!member) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "You are not a member of this project");
@@ -211,8 +211,8 @@ const deleteProject = async (projectId, user) => {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "This project is not exist");
     }
     const member = await member_model_1.Member.findOne({
-        userId: user._id,
-        workspaceId: existingProject?.workspaceId,
+        user: user._id,
+        workspace: existingProject?.workspace,
     });
     if (!member) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "You are not a member of this project");
@@ -223,7 +223,7 @@ const deleteProject = async (projectId, user) => {
     return {
         ...deletedProject,
         project: existingProject?._id,
-        workspace: existingProject?.workspaceId,
+        workspace: existingProject?.workspace,
     };
 };
 exports.projectService = {

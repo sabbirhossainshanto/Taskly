@@ -7,15 +7,20 @@ const memberSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
-    userId: {
+    user: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
         ref: "User",
     },
-    workspaceId: {
+    workspace: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
         ref: "Workspace",
+    },
+    status: {
+        type: String,
+        enum: ["pending", "accepted", "rejected"],
+        default: "pending",
     },
 }, {
     timestamps: true,

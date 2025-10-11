@@ -88,7 +88,7 @@ export const EditWorkspaceForm = ({
     <div className="flex flex-col gap-y-4">
       <DeleteDialog />
 
-      <Card className="w-full h-full border-none shadow-none">
+      <Card className="w-full h-full border-none shadow-none py-2">
         <CardHeader className="flex flex-row items-center gap-x-4 p-7 space-y-0">
           <Button
             size="sm"
@@ -106,10 +106,8 @@ export const EditWorkspaceForm = ({
             {initialValues.name}
           </CardTitle>
         </CardHeader>
-        <div className="px-7">
-          <DottedSeparator />
-        </div>
-        <CardContent className="px-7">
+
+        <CardContent className="px-2 md:px-7">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-y-4">
@@ -198,37 +196,37 @@ export const EditWorkspaceForm = ({
                     </div>
                   )}
                 />
-              </div>
-              <DottedSeparator className="py-7" />
-              <div className="flex items-center justify-between">
-                <Button
-                  disabled={isPending}
-                  type="button"
-                  size="lg"
-                  variant="secondary"
-                  onClick={onCancel}
-                  className={cn(!oncancel && "invisible")}
-                >
-                  Cancel
-                </Button>
-                <Button disabled={isPending} type="submit" size="lg">
-                  Save Changes
-                </Button>
+
+                <div className="flex items-center justify-between">
+                  <Button
+                    disabled={isPending}
+                    type="button"
+                    size="lg"
+                    variant="secondary"
+                    onClick={onCancel}
+                    className={cn(!oncancel && "invisible")}
+                  >
+                    Cancel
+                  </Button>
+                  <Button disabled={isPending} type="submit" size="lg">
+                    Save Changes
+                  </Button>
+                </div>
               </div>
             </form>
           </Form>
         </CardContent>
       </Card>
-
-      <Card className="w-full h-full border-none shadow-none">
-        <CardContent className="p-7">
+      <DottedSeparator className="px-2 md:px-7" />
+      <Card className="w-full h-full border-none shadow-none py-2">
+        <CardContent className="px-2 md:px-7">
           <div className="flex flex-col">
             <h3 className="font-bold">Danger Zone</h3>
             <p className="text-sm text-muted-foreground">
               Deleting a workspace is a irreversible and will remove all
               associated data
             </p>
-            <DottedSeparator className="py-7" />
+
             <Button
               className="mt-5 w-fit ml-auto text-white"
               size="sm"

@@ -18,6 +18,5 @@ router.get("/:workspaceId", auth_1.default, workspace_controller_1.workspaceCont
 router.get("/:workspaceId/analytics", auth_1.default, workspace_controller_1.workspaceController.getWorkspaceAnalytics);
 router.patch("/:workspaceId", auth_1.default, fileUploader_1.fileUploader.upload.single("file"), convertToJson_1.default, (0, validateRequest_1.default)(workspace_validation_1.workspaceValidation.updateWorkspacesSchema), workspace_controller_1.workspaceController.updateWorkspace);
 router.delete("/:workspaceId", auth_1.default, workspace_controller_1.workspaceController.deleteWorkspace);
-router.post("/:workspaceId/join", auth_1.default, workspace_controller_1.workspaceController.joinWorkspace);
-router.post("/:workspaceId", auth_1.default, workspace_controller_1.workspaceController.resetInviteCode);
+router.post("/join", auth_1.default, (0, validateRequest_1.default)(workspace_validation_1.workspaceValidation.joinWorkspaceSchema), workspace_controller_1.workspaceController.joinWorkspace);
 exports.workspaceRoutes = router;

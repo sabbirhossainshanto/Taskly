@@ -18,7 +18,7 @@ export const WorkspaceIdSettingsClient = () => {
     return <PageError message="Workspace not found" />;
   }
   return (
-    <div className="w-full lg:max-w-2xl">
+    <div className="w-full">
       <EditWorkspaceForm initialValues={initialValues.data} />
     </div>
   );

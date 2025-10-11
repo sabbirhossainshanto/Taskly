@@ -10,7 +10,7 @@ const projectSchema = new mongoose_1.Schema({
     image: {
         type: String,
     },
-    workspaceId: {
+    workspace: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "Workspace",
     },

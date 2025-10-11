@@ -14,7 +14,7 @@ exports.createProjectSchema = zod_1.default.object({
             zod_1.default.string().transform((value) => (value === "" ? undefined : value)),
         ])
             .optional(),
-        workspaceId: zod_1.default.string(),
+        workspace: zod_1.default.string(),
     }),
 });
 exports.updateProjectSchema = zod_1.default.object({

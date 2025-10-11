@@ -22,6 +22,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { PlusIcon } from "lucide-react";
+import { useInviteModal } from "@/features/members/hooks/use-invite-modal";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -32,6 +34,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const { open: openInviteModal } = useInviteModal();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -74,6 +77,19 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
+            <TableRow
+              className="hover:bg-primary-1100"
+              onClick={openInviteModal}
+            >
+              <TableCell colSpan={100}>
+                <div className="flex items-center gap-x-2 cursor-pointer">
+                  <span className="bg-secondary-300 rounded-full p-1">
+                    <PlusIcon className="size-4 text-primary/70" />
+                  </span>
+                  <span className="font-medium">Invite people</span>
+                </div>
+              </TableCell>
+            </TableRow>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow

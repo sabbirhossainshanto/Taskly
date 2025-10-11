@@ -70,29 +70,32 @@ export const WorkspaceSwitcher = () => {
               image={workspace?.data?.image}
             />
             <div className="flex flex-col">
-              <span className="truncate text-sm"> {workspace?.data?.name}</span>
+              <span className="truncate text-base">
+                {" "}
+                {workspace?.data?.name}
+              </span>
               <span className="text-xs text-primary-400 font-normal">
                 Free forever {workspaceMembers?.data?.length} member
               </span>
             </div>
           </div>
           <DropdownMenuItem
-            onClick={() => router.push(`/workspaces/${workspaceId}/setting`)}
-            className=" flex cursor-pointer text-xs px-4"
+            onClick={() => router.push(`/workspaces/${workspaceId}/settings`)}
+            className=" flex cursor-pointer text-sm px-4"
           >
             <SettingsIcon />
             <span> Settings</span>
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => router.push(`/workspaces/${workspaceId}/billing`)}
-            className=" flex cursor-pointer text-xs px-4"
+            className=" flex cursor-pointer text-sm px-4"
           >
             <SettingsIcon />
             <span> Upgrade</span>
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => router.push(`/workspaces/${workspaceId}/team`)}
-            className=" flex cursor-pointer text-xs px-4"
+            className=" flex cursor-pointer text-sm px-4"
           >
             <UsersIcon />
             <span> Manage Users</span>
@@ -122,7 +125,7 @@ export const WorkspaceSwitcher = () => {
                     <span className="truncate text-sm font-medium">
                       {workspace?.name}
                     </span>
-                    <span className="text-xs text-primary-400 font-normal">
+                    <span className="text-sm text-primary-400 font-normal">
                       Free forever
                     </span>
                   </div>
@@ -140,7 +143,7 @@ export const WorkspaceSwitcher = () => {
               <div className="bg-primary/10 rounded-md p-1">
                 <PlusIcon size={12} className="text-primary/60" />
               </div>
-              <p className="text-xs font-normal">Create Workspace</p>
+              <p className="text-sm font-normal">Create Workspace</p>
             </Button>
           </div>
         </DropdownMenuContent>

@@ -76,7 +76,7 @@ export const MembersList = () => {
       <div className="flex items-center gap-x-3">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="bg-secondary-400 w-fit px-1 py-2 rounded-md flex items-center gap-x-1 text-xs border border-primary-1000 text-secondary-900 font-medium cursor-pointer">
+            <div className="bg-secondary-200 w-fit px-1 py-2 rounded-md flex items-center gap-x-1 text-xs border border-primary-1000 text-secondary-900 font-medium cursor-pointer">
               <span> All Users ({data?.data?.length})</span>
               <ChevronDownIcon className="size-4" />
             </div>

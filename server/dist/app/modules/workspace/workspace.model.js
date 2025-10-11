@@ -10,10 +10,7 @@ const workspaceSchema = new mongoose_1.Schema({
     image: {
         type: String,
     },
-    inviteCode: {
-        type: String,
-    },
-    userId: {
+    user: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "User",
     },

@@ -8,8 +8,17 @@ const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const member_service_1 = require("./member.service");
 const http_status_1 = __importDefault(require("http-status"));
+const inviteMember = (0, catchAsync_1.default)(async (req, res) => {
+    const result = await member_service_1.memberService.inviteMember(req.body);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Invited successful",
+        data: result,
+    });
+});
 const getWorkspaceMember = (0, catchAsync_1.default)(async (req, res) => {
-    const result = await member_service_1.memberService.getWorkspaceMember(req.params.workspaceId);
+    const result = await member_service_1.memberService.getWorkspaceMember(req.params.workspaceId, req.query);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
@@ -40,4 +49,5 @@ exports.memberController = {
     getWorkspaceMember,
     deleteWorkspaceMember,
     updateWorkspaceMember,
+    inviteMember,
 };

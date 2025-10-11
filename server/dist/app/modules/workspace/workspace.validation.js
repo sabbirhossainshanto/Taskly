@@ -27,7 +27,13 @@ const updateWorkspacesSchema = zod_1.default.object({
             .optional(),
     }),
 });
+const joinWorkspaceSchema = zod_1.default.object({
+    body: zod_1.default.object({
+        token: zod_1.default.string(),
+    }),
+});
 exports.workspaceValidation = {
     createWorkspacesSchema,
     updateWorkspacesSchema,
+    joinWorkspaceSchema,
 };

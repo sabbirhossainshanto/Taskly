@@ -6,6 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.memberValidation = void 0;
 const zod_1 = __importDefault(require("zod"));
 const user_constant_1 = require("../user/user.constant");
+const inviteMemberSchema = zod_1.default.object({
+    body: zod_1.default.object({
+        email: zod_1.default.email(),
+        role: zod_1.default.enum(user_constant_1.USER_ROLE),
+    }),
+});
 const updateWorkspacesMember = zod_1.default.object({
     body: zod_1.default.object({
         role: zod_1.default.enum(user_constant_1.USER_ROLE),
@@ -15,4 +21,5 @@ const updateWorkspacesMember = zod_1.default.object({
 });
 exports.memberValidation = {
     updateWorkspacesMember,
+    inviteMemberSchema,
 };
